@@ -2,10 +2,7 @@
   "compilerOptions": {
     "checkJs": true,
     "allowJs": true,
-    "noEmit": true,
-    "paths": {
-      "monojs": ["monojs/src/index.js"]
-    }
+    "noEmit": true
   },
-  "include": ["src/*.js", "src/**/*.ts", "src/**/*.js"]
+  "include": ["src/**/*.js"]
 }
