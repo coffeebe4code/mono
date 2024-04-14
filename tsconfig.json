@@ -4,9 +4,8 @@
     "allowJs": true,
     "noEmit": true,
     "paths": {
-      "monoj": ["monoj/src/index.ts"],
-      "monojs": ["monojs/src/index.ts"]
+      "monojs": ["monojs/src/index.js"]
     }
   },
-  "include": ["src/*.js"]
+  "include": ["src/*.js", "src/**/*.ts", "src/**/*.js"]
 }
