@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "paths": {
+      "monoj": ["monoj/src/index.ts"],
+      "monojs": ["monojs/src/index.ts"]
+    }
+  },
+  "include": ["src/*.js"]
+}
