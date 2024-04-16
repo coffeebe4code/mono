@@ -4,19 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
-    "prettier:check": "prettier . --check"
+    "eslint:check:all": "eslint .",
+    "prettier:check:all": "prettier . --check",
+    "tsc:check:all": "tsc",
+    "esbuild:run:esbuild": "node esbuild.mjs"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "18.16.9",
+    "esbuild": "0.20.2",
     "eslint": "^9.0.0",
     "eslint-plugin-jsdoc": "^48.2.3",
     "jsdoc": "^4.0.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
   }
 }
