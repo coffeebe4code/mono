@@ -5,7 +5,7 @@ const config = {
   tabWidth: 2,
   semi: true,
   singleQuote: true,
-  printWidth: 120,
+  printWidth: 90,
   useTabs: false,
   arrowParens: 'avoid',
 };
