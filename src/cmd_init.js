@@ -72,12 +72,19 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     process.exit(error_code);
   }
 
-  const npm = exec('npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript').then(async (/** @type {{stderr:string}} */{stderr}) => {
+  const npm = exec('npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript')
+    .then(async (/** @type {{stderr:string}} */ { stderr }) => {
       if (stderr.length > 1) {
         error_code += 1;
         console.error('!npm failed with a stderr log\n ${stderr}');
       }
+    })
+    .catch(npm_suggestion);
+  await npm;
 
+  if (error_code > 0) {
+    process.exit(error_code);
+  }
 }
 
 /**
@@ -86,6 +93,19 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 function critical_error(err) {
   error_code += 1;
   console.error(err);
+}
+
+/**
+ * @param {any} err - the error from the callback
+ */
+function npm_suggestion(err) {
+  error_code += 1;
+  console.error(err);
+  console.error(`!expected npm to work
+    suggestions:
+    - ensure there is enough space on your machine
+    - ensure you have node/npm installed
+    - ensure that you have enough memory on your machine`);
 }
 
 /**
