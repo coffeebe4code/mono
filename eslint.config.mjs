@@ -5,12 +5,12 @@ import jest from 'eslint-plugin-jest';
 import globals from 'globals';
 
 export default [
-  ...js.configs.recommended,
+  js.configs.recommended,
   {
     files: ['src/**/*.spec.js'],
     ...jest.configs['flat/recommended'],
   },
-  ...jsdoc.configs['flat/recommended'],
+  jsdoc.configs['flat/recommended'],
   {
     files: ['src/**/*.js'],
     languageOptions: { globals: { ...globals.node } },
