@@ -21,6 +21,7 @@ export async function cmd_init() {
           x.includes('eslint.config') ||
           x.includes('prettier.config') ||
           x.includes('jest.config') ||
+          x.includes('monojs.json') ||
           x.includes('tsconfig')
         ) {
           error_code += 1;
@@ -29,7 +30,7 @@ export async function cmd_init() {
       });
       if (local_error) {
         console.error(`
-!expected to be in a repo without an "eslint.config", "prettier.config", "jest.config", or "tsconfig" file
+!expected to be in a repo without an "eslint.config", "prettier.config", "jest.config", "monojs.json", or "tsconfig" file
 monojs has an opinionated setup, and wants to manage those files for the initial js setup
     suggestions:
     - rename those files temporarily, and merge the config to your liking later
@@ -81,12 +82,12 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     process.exit(error_code);
   }
 
-  // start copying files.
   console.info('modifying .gitignore');
   const gitignore_write = fs
     .appendFile('./.gitignore', '\n# monojs\n.monojs\n.mono-cache\n', 'utf8')
     .catch(critical_error);
 
+  console.info('creating configs');
   const cp = fs.cp(__dirname + '/assets', process.cwd(), { recursive: true });
 
   await gitignore_write;

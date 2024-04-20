@@ -2,30 +2,33 @@
 // @ts-ignore
 import mini from 'minimist';
 import { cmd_init } from './cmd_init.js';
+import { cmd_add } from './cmd_add.js';
+
+const supported_templates = ['express', 'cli', 'node'];
 
 const commands = {
   build: {
-    help: `monojs build [target] <options>
+    help: `monojs build {target} <options>
     examples:
       \`monojs build my-app\` - runs a build of my-app
       \`monojs build my-app -n\` - removes the cache, and runs a build of my-app
     
     target:
-    {name}      ......... *required* provided name of target
-                          e.g. \`monojs build my-app\`
+    {name}        ......... *required* provided name of target
+                            e.g. \`monojs build my-app\`
 
     options:
-    --no-cache  ......... removes cache, and does a fresh build
-                          e.g. \`monojs build my-app --no-cache\`
-    -n          ......... alias of --no-cache
+    --no-cache    ......... removes cache, and does a fresh build
+                            e.g. \`monojs build my-app --no-cache\`
+    -n            ......... alias of --no-cache
   `,
   },
   touch: {
-    help: `monojs touch [target] <options>
+    help: `monojs touch {target} <options>
     examples:
-      \`monojs touch my-app\` - runs a build of my-app, and all upstream targets
-      \`monojs touch my-app -n\` - removes the cache, and runs a build of my-app
-                                  and all upstream targets
+      \`monojs touch my-app\`     - runs a build of my-app, and all upstream targets
+      \`monojs touch my-app -n\`  - removes the cache, and runs a build of my-app
+                                    and all upstream targets
     
     target:
     {name}      ......... *required* provided name of target
@@ -43,11 +46,39 @@ const commands = {
   },
   test: {
     help: `
-    monojs test <options>`,
+    monojs test`,
+  },
+  add: {
+    help: `
+    monojs add {target} <options>
+    examples:
+      \`monojs add @my-product/api -t express\` - creates a scoped node express app
+        the project location will be \`./src/services/my-product/api\`
+
+    target:
+    {name}      ......... *required* name of the target, uses the root scope if there is
+                          one in package.json
+    options:
+    --template  ......... *required* generates the project as a certain type.
+                          run \`monojs templates\` to a see a list of supported templates
+    -t          ......... alias of --template
+    `,
   },
   init: {
     help: `
     monojs init <options>`,
+  },
+  template: {
+    help: `
+    monojs template {supported}
+    examples:
+      \`monojs template express\` - shows detailed information for the express template
+
+    supported:
+${supported_templates.reduce((acc, val) => {
+  return acc + '\t\t' + val + '\n';
+})}
+    `,
   },
   graph: {
     help: `
@@ -93,6 +124,9 @@ function main() {
       break;
     case 'test':
       console.info(commands.test.help);
+      break;
+    case 'add':
+      cmd_add(args);
       break;
     case 'init':
       console.info('initializing monorepo');
