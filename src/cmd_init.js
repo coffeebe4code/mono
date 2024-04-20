@@ -65,7 +65,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
   }
 
   console.info('installing necessary npm dev dependencies');
-  const npm = exec('npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript')
+  const npm = exec('npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest')
     .then(async (/** @type {{stderr:string}} */ { stderr }) => {
       if (stderr.length > 1) {
         error_code += 1;

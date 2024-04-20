@@ -43,7 +43,7 @@ const commands = {
   },
   test: {
     help: `
-    monojs lint <options>`,
+    monojs test <options>`,
   },
   init: {
     help: `
@@ -60,9 +60,10 @@ const commands = {
       \`monojs graph\` - gets the help text of the graph command
 
     commands:
-    touch   ............. trigger all dependent upstream targets to run
+    touch   ............. trigger all dependent upstream targets to run stages
     build   ............. builds a specified target
     lint    ............. runs all analysis against target
+    test    ............. runs all tests against target
     init    ............. turns the current directory into a monojs monorepo
     graph   ............. all graph work for a target done with this command
     help    ............. shows this help message. no options available

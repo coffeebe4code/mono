@@ -5,5 +5,5 @@
     "noEmit": true,
     "noImplicitAny": true
   },
-  "include": ["src/**/*.js"]
+  "include": ["**/*.js"]
 }
