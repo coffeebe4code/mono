@@ -9,14 +9,7 @@ let error_code = 0;
  *
  */
 export async function cmd_init() {
-  const gitignore = fs
-    .access('./.gitignore', fs.constants.F_OK)
-    .then(async () => {
-      //await fs
-      //  .appendFile('./.gitignore', '\n# monojs\n.monojs\n.mono-cache', 'utf8')
-      //  .catch(critical_error);
-    })
-    .catch(git_suggestion);
+  const gitignore = fs.access('./.gitignore', fs.constants.F_OK).catch(git_suggestion);
   const gitdir = fs.access('.git').catch(git_suggestion);
   const package_file = fs.readFile('package.json').catch(node_suggestion);
   const readdir = fs
@@ -39,9 +32,8 @@ export async function cmd_init() {
 !expected to be in a repo without an "eslint.config", "prettier.config", "jest.config", or "tsconfig" file
 monojs has an opinionated setup, and wants to manage those files for the initial js setup
     suggestions:
-    - run \`monojs init -f\` to overwrite files
-    - commit all your local changes before running that command
     - rename those files temporarily, and merge the config to your liking later
+    - monojs requires a clean working git tree, revert if the changes are not adequate
   `);
       }
     })
@@ -61,7 +53,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
       if (stdout.length > 1) {
         error_code += 1;
         console.error(`!expected a clean working branch
-          please handle all local pending changes in your working branch.`);
+          please handle all local pending changes in your current branch.`);
       }
     })
     .catch(git_suggestion);
@@ -72,6 +64,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     process.exit(error_code);
   }
 
+  console.info('installing necessary npm dev dependencies');
   const npm = exec('npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript')
     .then(async (/** @type {{stderr:string}} */ { stderr }) => {
       if (stderr.length > 1) {
@@ -85,6 +78,17 @@ monojs has an opinionated setup, and wants to manage those files for the initial
   if (error_code > 0) {
     process.exit(error_code);
   }
+
+  // start copying files.
+  console.info('modifying .gitignore');
+  const gitignore_write = fs
+    .appendFile('./.gitignore', '\n# monojs\n.monojs\n.mono-cache\n', 'utf8')
+    .catch(critical_error);
+
+  const cp = fs.cp(__dirname + '/assets', process.cwd(), { recursive: true });
+
+  await gitignore_write;
+  await cp;
 }
 
 /**
@@ -105,6 +109,7 @@ function npm_suggestion(err) {
     suggestions:
     - ensure there is enough space on your machine
     - ensure you have node/npm installed
+    - ensure you do not have legacy peer deps with your existing config
     - ensure that you have enough memory on your machine`);
 }
 
