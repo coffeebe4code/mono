@@ -133,3 +133,8 @@ dist
 
 
 .nx/cache
+
+# monojs
+.monojs
+.mono-cache
+
