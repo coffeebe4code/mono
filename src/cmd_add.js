@@ -1,8 +1,6 @@
 import * as fs from 'node:fs/promises';
-import { exec as execCb } from 'node:child_process';
-import { promisify } from 'node:util';
+import * as v from './validations.js';
 
-const exec = promisify(execCb);
 let error_code = 0;
 
 /**
@@ -14,7 +12,7 @@ export async function cmd_add(args) {
   /** @type {boolean | undefined} */
   const template = args.template ?? args.t;
   ///** @type {boolean | undefined} */
-  const publish = args.publish ?? args.p;
+  //const publish = args.publish ?? args.p;
 
   if (!name || !template) {
     error_code += 1;
@@ -61,24 +59,15 @@ export async function cmd_add(args) {
     process.exit(1);
   }
 
-  const gitdir = fs.access('.git').catch(git_suggestion);
-  const package_file = fs.readFile('package.json').catch(node_suggestion);
-  const monojs_file = fs.access('monojs.json').catch(mono_suggestion);
+  const gitdir = v.git_dir_exists().catch(inc_error);
+  const package_file = v.package_exists().catch(inc_error);
+  const monojs_file = v.mono_exists().catch(inc_error);
+  const git = v.git_dir_exists().catch(inc_error);
 
-  const git = exec('git status -s')
-    .then(async (/** @type {{stdout:string}} */ { stdout }) => {
-      if (stdout.length > 1) {
-        error_code += 1;
-        console.error(`!expected a clean working branch
-          please handle all local pending changes in your current branch.`);
-      }
-    })
-    .catch(git_suggestion);
-
-  await git;
   await gitdir;
   await package_file;
   await monojs_file;
+  await git;
 
   // todo:: still need to get this correct
   const cp = fs.cp(__dirname + '/assets/templates/', process.cwd(), { recursive: true });
@@ -89,37 +78,7 @@ export async function cmd_add(args) {
 /**
  * @param {any} err - the error from the callback
  */
-function node_suggestion(err) {
+function inc_error(err) {
   error_code += 1;
   console.error(err);
-  console.error(`!expected to be ran in a node project
-    suggestions:
-    - ensure there is an existing package.json file
-    - ensure this command was ran at root of repository
-    - ensure that npm init was ran in this repository`);
-}
-
-/**
- * @param {any} err - the error from the callback
- */
-function mono_suggestion(err) {
-  error_code += 1;
-  console.error(err);
-  console.error(`!expected to be ran in a monojs repository
-    suggestions:
-    - ensure there is an existing monojs.json file
-    - ensure this command was ran at root of repository`);
-}
-
-/**
- * @param {any} err - the error from the callback
- */
-function git_suggestion(err) {
-  error_code += 1;
-  console.error(err);
-  console.error(`!expected to be ran in a git repository
-    suggestions:
-    - ensure there is an existing .git folder
-    - ensure this command was ran at root of repository
-    - ensure git is installed`);
 }
