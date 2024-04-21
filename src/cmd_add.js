@@ -1,5 +1,6 @@
 import * as fs from 'node:fs/promises';
 import * as v from './validations.js';
+import * as t from './templates.js';
 
 let error_code = 0;
 
@@ -9,7 +10,7 @@ let error_code = 0;
 export async function cmd_add(args) {
   /** @type {string | undefined} */
   const name = args._[1];
-  /** @type {boolean | undefined} */
+  /** @type {string | undefined} */
   const template = args.template ?? args.t;
   ///** @type {boolean | undefined} */
   //const publish = args.publish ?? args.p;
@@ -41,13 +42,25 @@ export async function cmd_add(args) {
     process.exit(error_code);
   }
   const scoped_name = name.includes('@') && name.includes('/');
-  const resolved_dir = `./src/services/${scoped_name ? name.split('@')[1] : name}`;
+  const template_loc = t.get_template_kind_path(template);
+
+  if (!template_loc) {
+    error_code += 1;
+    console.error(`!expected supported template. '${template}' provided
+    suggestions:
+    - provide one of ${t.get_templates()}`);
+  }
+  const resolved_dir = `src/${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
+
+  if (error_code > 1) {
+    process.exit(error_code);
+  }
 
   const loc = fs
-    .access(resolved_dir)
+    .access('./' + resolved_dir)
     .then(() => {
       error_code += 1;
-      console.error(`!expected ${resolved_dir} to not exist
+      console.error(`!expected ./${resolved_dir} to not exist
       suggestions:
       - rename the directory and commit those changes
       - if you are not satisfied, you can undo your changes`);
@@ -69,8 +82,13 @@ export async function cmd_add(args) {
   await monojs_file;
   await git;
 
-  // todo:: still need to get this correct
-  const cp = fs.cp(__dirname + '/assets/templates/', process.cwd(), { recursive: true });
+  const cp = fs.cp(
+    __dirname + '/assets/templates/' + template,
+    process.cwd() + '/' + resolved_dir,
+    {
+      recursive: true,
+    },
+  );
 
   await cp;
 }

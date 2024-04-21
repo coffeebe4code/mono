@@ -3,8 +3,7 @@
 import mini from 'minimist';
 import { cmd_init } from './cmd_init.js';
 import { cmd_add } from './cmd_add.js';
-
-const supported_templates = ['express', 'cli', 'node', 'package'];
+import * as templates from './templates.js';
 
 const commands = {
   build: {
@@ -86,10 +85,10 @@ const commands = {
     help: `
     monojs template [supported]
     examples:
-      \`monojs template express\` - shows detailed information for the express template
+      \`monojs template\` - shows this help text
 
     supported:
-${supported_templates.reduce((acc, val) => {
+${templates.get_templates().reduce((acc, val) => {
   return acc + '    ' + val + '\n';
 }, '')}
     `,
@@ -117,9 +116,9 @@ ${supported_templates.reduce((acc, val) => {
 };
 
 /**
- * @returns {any} returns if nothing failed
+ * @returns {Promise<any>} returns if nothing failed
  */
-function main() {
+async function main() {
   const args = mini(process.argv.slice(2));
   const command = args?._[0];
   if (!command) {
@@ -140,14 +139,14 @@ function main() {
       console.info(commands.test.help);
       break;
     case 'add':
-      cmd_add(args);
+      await cmd_add(args);
       break;
     case 'init':
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
-      cmd_init();
+      await cmd_init();
       break;
     case 'graph':
       console.info(commands.graph.help);
@@ -158,6 +157,9 @@ function main() {
     case 'template':
       console.info(commands.template.help);
       break;
+    case 'templates':
+      console.info(commands.template.help);
+      break;
     default:
       console.info('!invalid command provided');
       console.info(commands.help.help);
@@ -165,4 +167,9 @@ function main() {
   }
 }
 
-main();
+main()
+  .then(() => {})
+  .catch(() => {
+    console.error('');
+    process.exit(1);
+  });
