@@ -71,8 +71,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
   )
     .then(async (/** @type {{stderr:string}} */ { stderr }) => {
       if (stderr.length > 1) {
-        error_code += 1;
-        console.error('!npm failed with a stderr log\n ${stderr}');
+        critical_error(`!npm failed with a stderr log\n${stderr}`);
       }
     })
     .catch(npm_suggestion);
@@ -88,7 +87,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     .catch(critical_error);
 
   console.info('creating configs');
-  const cp = fs.cp(__dirname + '/assets', process.cwd(), { recursive: true });
+  const cp = fs.cp(__dirname + '/assets/init', process.cwd(), { recursive: true });
 
   await gitignore_write;
   await cp;

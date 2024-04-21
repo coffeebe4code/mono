@@ -1,2 +1,0 @@
-## init
-- add jest.config
