@@ -16,6 +16,6 @@ export default [
     languageOptions: { globals: { ...globals.node } },
   },
   {
-    ignores: ['bin/*'],
+    ignores: ['bin/*', 'assets/*'],
   },
 ];

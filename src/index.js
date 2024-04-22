@@ -139,15 +139,13 @@ async function main() {
       console.info(commands.test.help);
       break;
     case 'add':
-      await cmd_add(args);
-      break;
+      return cmd_add(args);
     case 'init':
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
-      await cmd_init();
-      break;
+      return cmd_init();
     case 'graph':
       console.info(commands.graph.help);
       break;

@@ -40,6 +40,7 @@ export async function cmd_add(args) {
 
   if (error_code > 1) {
     process.exit(error_code);
+    return;
   }
   const scoped_name = name.includes('@') && name.includes('/');
   const template_loc = t.get_template_kind_path(template);
@@ -54,6 +55,7 @@ export async function cmd_add(args) {
 
   if (error_code > 1) {
     process.exit(error_code);
+    return;
   }
 
   const loc = fs
@@ -69,7 +71,8 @@ export async function cmd_add(args) {
 
   await loc;
   if (error_code > 1) {
-    process.exit(1);
+    process.exit(error_code);
+    return;
   }
 
   const gitdir = v.git_dir_exists().catch(inc_error);
@@ -82,6 +85,11 @@ export async function cmd_add(args) {
   await monojs_file;
   await git;
 
+  if (error_code > 1) {
+    process.exit(error_code);
+    return;
+  }
+
   const cp = fs.cp(
     __dirname + '/assets/templates/' + template,
     process.cwd() + '/' + resolved_dir,
@@ -91,6 +99,7 @@ export async function cmd_add(args) {
   );
 
   await cp;
+  return;
 }
 
 /**
