@@ -6,6 +6,7 @@ let error_code = 0;
 
 /**
  * @param {any} args - the args from command
+ * @returns {Promise<void>}
  */
 export async function cmd_add(args) {
   /** @type {string | undefined} */
@@ -38,9 +39,8 @@ export async function cmd_add(args) {
     }
   }
 
-  if (error_code > 1) {
+  if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
   const scoped_name = name.includes('@') && name.includes('/');
   const template_loc = t.get_template_kind_path(template);
@@ -53,9 +53,8 @@ export async function cmd_add(args) {
   }
   const resolved_dir = `src/${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
 
-  if (error_code > 1) {
+  if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   const loc = fs
@@ -70,9 +69,8 @@ export async function cmd_add(args) {
     .catch(() => {});
 
   await loc;
-  if (error_code > 1) {
+  if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   const gitdir = v.git_dir_exists().catch(inc_error);
@@ -85,9 +83,8 @@ export async function cmd_add(args) {
   await monojs_file;
   await git;
 
-  if (error_code > 1) {
+  if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   const cp = fs.cp(
@@ -98,8 +95,7 @@ export async function cmd_add(args) {
     },
   );
 
-  await cp;
-  return;
+  return await cp;
 }
 
 /**

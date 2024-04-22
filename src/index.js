@@ -139,13 +139,15 @@ async function main() {
       console.info(commands.test.help);
       break;
     case 'add':
-      return cmd_add(args);
+      await cmd_add(args);
+      break;
     case 'init':
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
-      return cmd_init();
+      await cmd_init();
+      break;
     case 'graph':
       console.info(commands.graph.help);
       break;
@@ -168,6 +170,5 @@ async function main() {
 main()
   .then(() => {})
   .catch(() => {
-    console.error('');
-    process.exit(1);
+    process.exit(255);
   });

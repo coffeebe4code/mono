@@ -44,7 +44,6 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 
   if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   const git = v.git_clean().catch(inc_error);
@@ -53,7 +52,6 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 
   if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   console.info('installing necessary npm dev dependencies');
@@ -66,7 +64,6 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 
   if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   console.info('modifying .gitignore');
@@ -82,7 +79,6 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 
   if (error_code > 0) {
     process.exit(error_code);
-    return;
   }
 
   console.info('completed initialization');
