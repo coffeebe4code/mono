@@ -6,15 +6,25 @@ import { cmd_add } from './cmd_add.js';
 import * as templates from './templates.js';
 
 const commands = {
+  upgrade: {
+    help: `
+    monojs upgrade
+    examples:
+      \`monojs upgrade\` - upgrades the current workspace to the globally installed version of monojs
+    
+    options:
+    --help      ......... shows this help text
+  `,
+  },
   build: {
     help: `
-    monojs build {target} <options>
+    monojs build {project} <options>
     examples:
       \`monojs build my-app\` - runs a build of my-app
       \`monojs build my-app -n\` - removes the cache, and runs a build of my-app
     
-    target:
-    {name}      ......... *required* provided name of target
+    project:
+    {name}      ......... *required* provided name of project
                           e.g. \`monojs build my-app\`
 
     options:
@@ -26,18 +36,18 @@ const commands = {
   },
   touch: {
     help: `
-    monojs touch {target} <options>
+    monojs touch {projects} <options>
     examples:
-      \`monojs touch my-app\`     - runs a build of my-app, and all upstream targets
+      \`monojs touch my-app\`     - runs a build of my-app, and all upstream projects
       \`monojs touch my-app -n\`  - removes the cache, and runs a build of my-app
-                                    and all upstream targets
+                                    and all upstream projects
     
-    target:
-    {name}      ......... *required* provided name of target
-                          e.g. \`monojs touch my-app\`
+    projects:
+    {name,name} ......... *required* provided name of projects as comma separated list
+                          e.g. \`monojs touch my-app,shopping-cart\`
 
     options:
-    --no-cache  ......... removes cache, and does a fresh build, and upstream targets
+    --no-cache  ......... removes cache, and does a fresh build, and upstream projects
                           e.g. \`monojs touch my-app --no-cache\`
     -n          ......... alias of --no-cache
     --help      ......... shows this help text
@@ -45,29 +55,52 @@ const commands = {
   },
   lint: {
     help: `
-    monojs lint <options>`,
+    monojs lint {project} <options>`,
+  },
+  serve: {
+    help: `
+    monojs serve {project} <options>`,
   },
   test: {
     help: `
     monojs test`,
   },
-  add: {
+  project: {
     help: `
-    monojs add {target} <options>
+    monojs project {project} <options>
     examples:
-      \`monojs add @my-product/api -t express\` - creates a scoped node express app
-        the project location will be \`./src/services/my-product/api\`
-      \`monojs add shopping-cart -t express\` - creates a node express app
+      \`monojs project shopping-cart -t koa\` - creates a node koa app
         the project location will be \`./src/services/shopping-cart\`
 
-    target:
-    {name}      ......... *required* name of the target, uses the root scope if there is
+    project:
+    {name}      ......... *required* name of the project, can be scoped or unscoped
+
+    options:
+    --template  ......... *required* generates the project as a certain type.
+                          run \`monojs templates\` to a see a list of supported templates
+    -t          ......... alias of --template
+    --publish   ......... instructs monojs that the project is publishable
+    -p          ......... alias of --publish
+    --help      ......... shows this help text
+    `,
+  },
+  add: {
+    help: `
+    monojs add {project} <options>
+    examples:
+      \`monojs add @my-product/api -t koa\` - creates a scoped node koa app
+        the project location will be \`./src/services/my-product/api\`
+      \`monojs add shopping-cart -t koa\` - creates a node koa app
+        the project location will be \`./src/services/shopping-cart\`
+
+    project:
+    {name}      ......... *required* name of the project, uses the root scope if there is
                           one in package.json
     options:
     --template  ......... *required* generates the project as a certain type.
                           run \`monojs templates\` to a see a list of supported templates
     -t          ......... alias of --template
-    --publish   ......... instructs monojs that the target is publishable
+    --publish   ......... instructs monojs that the project is publishable
     -p          ......... alias of --publish
     --help      ......... shows this help text
     `,
@@ -101,15 +134,15 @@ ${templates.get_templates().reduce((acc, val) => {
     help: `monojs [command] <options>
     examples:
       \`monojs build my-app\` - runs a build of my-app
-      \`monojs graph\` - gets the help text of the graph command
+      \`monojs graph --help\` - gets the help text of the graph command
 
     commands:
-    touch   ............. trigger all dependent upstream targets to run stages
-    build   ............. builds a specified target
-    lint    ............. runs all analysis against target
-    test    ............. runs all tests against target
+    touch   ............. trigger all dependent upstream projects targets to run
+    build   ............. builds a specified project
+    lint    ............. runs all analysis against a project
+    test    ............. runs all tests against a project
     init    ............. turns the current directory into a monojs monorepo
-    graph   ............. all graph work for a target done with this command
+    graph   ............. all graph work for a project done with this command
     help    ............. shows this help message. no options available
   `,
   },
@@ -126,6 +159,9 @@ async function main() {
     process.exit(0);
   }
   switch (command) {
+    case 'upgrade':
+      console.info(commands.upgrade.help);
+      break;
     case 'build':
       console.info(commands.build.help);
       break;

@@ -78,10 +78,7 @@ export async function cmd_add(args) {
   const monojs_file = v.mono_exists().catch(inc_error);
   const git = v.git_dir_exists().catch(inc_error);
 
-  await gitdir;
-  await package_file;
-  await monojs_file;
-  await git;
+  await Promise.all([gitdir, package_file, monojs_file, git]);
 
   if (error_code > 0) {
     process.exit(error_code);
@@ -94,8 +91,18 @@ export async function cmd_add(args) {
       recursive: true,
     },
   );
+  await cp;
 
-  return await cp;
+  const installs = fs
+    .readFile(process.cwd() + '/' + resolved_dir + '/installs.txt', { encoding: 'utf8' })
+    .then(async data => {
+      const install = v.npm_install(data.trim());
+      const del = fs.unlink(process.cwd() + '/' + resolved_dir + '/installs.txt');
+      return await Promise.all([install, del]);
+    });
+
+  await Promise.all([installs]);
+  return;
 }
 
 /**
