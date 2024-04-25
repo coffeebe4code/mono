@@ -17,21 +17,21 @@ describe('mono_helper', () => {
       // service
       {
         kind: 'lint',
-        cmd: 'lint1',
+        cmd: 'p1lint',
         uuid: 'a',
         dependencies_up: [],
         dependencies_down: [deps[0], deps[1], deps[2], deps[3]],
       },
       {
         kind: 'build',
-        cmd: 'build1',
+        cmd: 'p1build',
         uuid: 'b',
         dependencies_up: [],
         dependencies_down: [deps[0], deps[1], deps[2], deps[3]],
       },
       {
         kind: 'test',
-        cmd: 'test1',
+        cmd: 'p1test',
         uuid: 'c',
         dependencies_up: [],
         dependencies_down: [],
@@ -39,21 +39,21 @@ describe('mono_helper', () => {
       // lib 1
       {
         kind: 'lint',
-        cmd: 'lint2',
+        cmd: 'p2lint',
         uuid: 'd',
         dependencies_down: [deps[1], deps[3]],
         dependencies_up: [],
       },
       {
         kind: 'build',
-        cmd: 'build2',
+        cmd: 'p2build',
         uuid: 'e',
         dependencies_up: [],
         dependencies_down: [deps[1], deps[3]],
       },
       {
         kind: 'test',
-        cmd: 'test2',
+        cmd: 'p2test',
         uuid: 'f',
         dependencies_up: [],
         dependencies_down: [],
@@ -61,21 +61,21 @@ describe('mono_helper', () => {
       // lib 2
       {
         kind: 'lint',
-        cmd: 'lint3',
+        cmd: 'p3lint',
         uuid: 'g',
         dependencies_down: [],
         dependencies_up: [],
       },
       {
         kind: 'build',
-        cmd: 'build3',
+        cmd: 'p3build',
         uuid: 'h',
         dependencies_up: [],
         dependencies_down: [],
       },
       {
         kind: 'test',
-        cmd: 'test3',
+        cmd: 'p3test',
         uuid: 'i',
         dependencies_up: [],
         dependencies_down: [],
@@ -111,16 +111,16 @@ describe('mono_helper', () => {
       projects: projects,
     };
 
-    const result = get_run_chain_top(mono, mono.projects[0], 'test');
-    expect(result).toBe({
-      lint: ['lint1', 'lint2', 'lint3'],
-      build: ['build1', 'build2', 'build3'],
+    const result = get_run_chain_top(mono, mono.projects[0], 'build');
+    expect(result).toStrictEqual({
+      lint: ['p1lint', 'p2lint', 'p3lint'],
+      build: ['p2build', 'p3build', 'p1build'],
       test: [],
-      //test: ['test1', 'test2', 'test3'],
+      //test: ['p1test', 'p2test', 'p3test'],
       e2e: [],
       install: [],
       publish: [],
-      service: [],
+      serve: [],
     });
   });
 });

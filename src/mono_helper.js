@@ -187,13 +187,12 @@ export function get_run_chain_top(mono, project, kind) {
  * @returns {RunsStruct} returns result
  */
 export function get_run_chain_top_rec(mono, project, kind, processed, result) {
-  console.log(result);
   project.targets.forEach(t => {
-    const has_processed = !processed.some(p => p === t.uuid);
+    const has_processed = processed.some(p => p === t.uuid);
     if (!has_processed) {
       if (t.kind === kind || get_order(kind) > get_order(t.kind)) {
         Object.entries(result).forEach(([key, val]) => {
-          if (key === kind) {
+          if (key === t.kind) {
             val.push(t.cmd);
             processed.push(t.uuid);
           }
@@ -202,7 +201,9 @@ export function get_run_chain_top_rec(mono, project, kind, processed, result) {
           mono.projects.forEach(p => {
             if (p.path === dep.path) {
               p.targets.forEach(inner => {
-                result = get_run_chain_top_rec(mono, p, inner.kind, processed, result);
+                if (inner.kind === kind || get_order(kind) > get_order(inner.kind)) {
+                  result = get_run_chain_top_rec(mono, p, inner.kind, processed, result);
+                }
               });
             }
           });
