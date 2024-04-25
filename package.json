@@ -13,7 +13,7 @@
     "tsc": "tsc",
     "build": "node esbuild.mjs",
     "local": "npm i . -g",
-    "compile": "npm run lint && npm run prettier && npm run tsc && npm run build",
+    "compile": "npm run lint ; npm run prettier ; npm run tsc ; npm run build ; npm run jest",
     "test": "jest"
   },
   "author": "",
@@ -31,6 +31,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "minimist": "^1.2.8"
+    "minimist": "^1.2.8",
+    "uuid": "^9.0.1"
   }
 }

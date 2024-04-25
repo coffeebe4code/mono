@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
+    "module": "es2022",
+    "target": "es2022",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "checkJs": true,
     "allowJs": true,
     "noEmit": true,
     "noImplicitAny": true
   },
-  "include": ["**/*.js"]
+  "include": ["src/**/*.js"]
 }
