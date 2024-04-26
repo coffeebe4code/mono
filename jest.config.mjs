@@ -4,6 +4,7 @@ const config = {
   cacheDirectory: '.mono-cache/jest_rs',
   clearMocks: true,
   maxWorkers: '50%',
+  transform: {},
 };
 
 export default config;

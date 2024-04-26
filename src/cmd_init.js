@@ -54,7 +54,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     process.exit(error_code);
   }
 
-  console.info('installing necessary npm dev dependencies');
+  console.info('installing necessary npm dev dependencies. this could take a minute');
   const npm = v
     .npm_install(
       'npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest',
@@ -68,11 +68,21 @@ monojs has an opinionated setup, and wants to manage those files for the initial
 
   console.info('modifying .gitignore');
   const gitignore_write = v
-    .append_file('./.gitignore', '\n# monojs\n.monojs\n.mono-cache\n')
+    .append_file(
+      './.gitignore',
+      `# monojs
+.monojs
+.mono-cache
+bin
+node_modules
+dist`,
+    )
     .catch(inc_error);
 
   console.info('creating configs');
-  const cp = fs.cp(__dirname + '/assets/init', process.cwd(), { recursive: true });
+  const cp = fs
+    .cp(__dirname + '/assets/init', process.cwd(), { recursive: true })
+    .catch(inc_error);
 
   await gitignore_write;
   await cp;

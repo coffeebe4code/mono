@@ -1,6 +1,7 @@
 import * as fs from 'node:fs/promises';
 import * as v from './validations.js';
 import * as t from './templates.js';
+import { create_project, load_mono } from './mono_helper.js';
 
 let error_code = 0;
 
@@ -14,7 +15,7 @@ export async function cmd_add(args) {
   /** @type {string | undefined} */
   const template = args.template ?? args.t;
   ///** @type {boolean | undefined} */
-  //const publish = args.publish ?? args.p;
+  const publish = args.publish ?? args.p;
 
   if (!name || !template) {
     error_code += 1;
@@ -93,15 +94,25 @@ export async function cmd_add(args) {
   );
   await cp;
 
+  const path = process.cwd() + '/' + resolved_dir;
   const installs = fs
-    .readFile(process.cwd() + '/' + resolved_dir + '/installs.txt', { encoding: 'utf8' })
+    .readFile(path + '/installs.txt', { encoding: 'utf8' })
     .then(async data => {
       const install = v.npm_install(data.trim());
-      const del = fs.unlink(process.cwd() + '/' + resolved_dir + '/installs.txt');
+      const del = fs.unlink(path + '/installs.txt');
       return await Promise.all([install, del]);
-    });
+    })
+    .catch(inc_error);
 
-  await Promise.all([installs]);
+  const monojs = load_mono()
+    .then(async (/** @type {import('./mono_helper.js').MonoStruct} */ mono) => {
+      let proj = create_project('./' + resolved_dir, name, template, publish);
+
+      mono.projects.push(proj);
+    })
+    .catch(inc_error);
+
+  await Promise.all([installs, monojs]);
   return;
 }
 

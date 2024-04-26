@@ -6,7 +6,7 @@ const es = esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
   platform: 'node',
-  outfile: 'bin/index.js',
+  outfile: 'bin/index.cjs',
   minify: true,
 });
 

@@ -1,6 +1,27 @@
 import * as fs from 'node:fs/promises';
 // @ts-ignore
-import * as uuid from 'uuid';
+import { v4 } from 'uuid';
+import { TemplateKind } from './templates.js';
+
+/**
+ * Gets the targets for a given template
+ * @param {string} kind - the template kind
+ * @returns {string[] | undefined} all target kinds needed
+ */
+export function get_target_kinds(kind) {
+  switch (kind) {
+    case TemplateKind.SERVICE:
+      return ['lint', 'build', 'test', 'e2e', 'serve'];
+    case TemplateKind.CLI:
+      return ['lint', 'build', 'test', 'install', 'publish'];
+    case TemplateKind.UI:
+      return ['lint', 'build', 'test', 'e2e', 'serve'];
+    case TemplateKind.LIB:
+      return ['lint', 'build', 'test', 'publish'];
+    default:
+      return undefined;
+  }
+}
 
 export const TargetValues = {
   LINT: 'lint',
@@ -11,6 +32,7 @@ export const TargetValues = {
   PUBLISH: 'publish',
   SERVE: 'serve',
 };
+
 /**
  * @param {string} val - this is the kind
  * @returns {number} returns the index
@@ -71,7 +93,6 @@ function get_order(val) {
  * @property {string} path - file location
  * @property {string} name - scoped or unscoped name
  * @property {string} type - service, cli, etc
- * @property {boolean} publishable - whether or not it is publishable
  * @property {TargetStruct[]} targets - the targets of the project
  */
 
@@ -105,30 +126,61 @@ export async function load_mono() {
 }
 
 /**
- * @param {MonoStruct} mono - this is the mono object from load_mono
- * @param {ProjectStruct} project - this is the project to add
- * @returns {void}
- */
-export function add_project(mono, project) {
-  mono.projects.push(project);
-}
-
-/**
- * @param {ProjectStruct} project - this is the project object
  * @param {string} cmd - this is the cmd for the target
  * @param {string} kind - this is the kind for the target. TargetValues
- * @returns {void}
+ * @returns {TargetStruct} returns the target
  */
-export function add_target(project, cmd, kind) {
+export function create_target(cmd, kind) {
   /** @type {TargetStruct} */
   const target = {
     cmd,
     kind,
-    uuid: uuid(),
+    uuid: v4(),
     dependencies_down: [],
     dependencies_up: [],
   };
-  project.targets.push(target);
+  return target;
+}
+
+/**
+ * @param {string} path - this is the path for the project
+ * @param {string} name - this is the name for the project
+ * @param {string} type - this is the template type for the project
+ * @param {boolean} publishable - this is if publishable
+ * @returns {ProjectStruct} returns the project
+ */
+export function create_project(path, name, type, publishable) {
+  let cmds = get_target_kinds(type);
+  if (!publishable) {
+    cmds = cmds.filter(ele => ele !== 'publish');
+  }
+  /** @type {TargetStruct[]} */
+  const targets = cmds.map(kind => {
+    switch (kind) {
+      case 'lint':
+        return create_target(`node ./node_modules/bin/eslint ${path}`, kind);
+      case 'build':
+        return create_target(`node ./monojs/build.js ${path}`, kind);
+      case 'test':
+        return create_target(
+          `node --experimental-vm-modules ./node_modules/.bin/jest ${path} `,
+          kind,
+        );
+      case 'install':
+        return create_target(`npm i ${path} -g`, kind);
+      default:
+        return undefined;
+    }
+  });
+
+  /** @type {ProjectStruct} */
+  const project = {
+    path,
+    name,
+    type,
+    targets: targets,
+  };
+  return project;
 }
 
 /**

@@ -5,12 +5,12 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "monojs": "./bin/index.js"
+    "monojs": "./bin/index.cjs"
   },
   "scripts": {
     "lint": "eslint .",
     "prettier": "prettier . --check",
-    "jest": "jest",
+    "jest": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "tsc": "tsc",
     "build": "node esbuild.mjs",
     "local": "npm i . -g",
