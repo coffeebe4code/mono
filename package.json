@@ -1,5 +1,5 @@
 {
-  "name": "@monojs/cli",
+  "name": "monojs",
   "version": "0.0.1",
   "description": "This is an opinionated, dirty, bikeshed based monorepo tool and framework for building and deploying multiple projects with very few options and customizability",
   "main": "index.js",
