@@ -1,7 +1,7 @@
 {
-  "name": "monojs",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@monojs/cli",
+  "version": "0.0.1",
+  "description": "This is an opinionated, dirty, bikeshed based monorepo tool and framework for building and deploying multiple projects with very few options and customizability",
   "main": "index.js",
   "type": "module",
   "bin": {
@@ -17,8 +17,8 @@
     "compile": "npm run lint ; npm run prettier ; npm run tsc ; npm run build ; npm run jest",
     "test": "jest"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "coffeeb4code",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
