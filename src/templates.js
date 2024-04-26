@@ -10,7 +10,6 @@ const SupportedTemplates = {
   //express: TemplateKind.SERVICE,
   koa: TemplateKind.SERVICE,
   cli: TemplateKind.CLI,
-  //html: TemplateKind.UI,
   //package: TemplateKind.LIB,
 };
 

@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 import * as v from './validations.js';
 import * as t from './templates.js';
-import { create_project, load_mono } from './mono_helper.js';
+import { create_project, load_mono, write_mono } from './mono_helper.js';
 
 let error_code = 0;
 
@@ -106,14 +106,27 @@ export async function cmd_add(args) {
 
   const monojs = load_mono()
     .then(async (/** @type {import('./mono_helper.js').MonoStruct} */ mono) => {
-      let proj = create_project('./' + resolved_dir, name, template, publish);
-
+      let proj = create_project('./' + resolved_dir, name, template_loc, publish);
       mono.projects.push(proj);
+      write_mono(mono);
     })
     .catch(inc_error);
 
-  await Promise.all([installs, monojs]);
-  return;
+  const tsconfig = fs
+    .readFile('./tsconfig.json', { encoding: 'utf8' })
+    .then(async (/** @type {any} */ data) => {
+      const obj = JSON.parse(data);
+      obj.compilerOptions.paths = obj.compilerOptions.paths || {};
+      obj.compilerOptions.paths[name] = [`./${resolved_dir}/*`];
+      return fs.writeFile('./tsconfig.json', JSON.stringify(obj, undefined, 2));
+    })
+    .catch(inc_error);
+
+  await Promise.all([installs, monojs, tsconfig]);
+
+  if (error_code > 0) {
+    process.exit(error_code);
+  }
 }
 
 /**

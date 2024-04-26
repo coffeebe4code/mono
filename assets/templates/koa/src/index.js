@@ -1,8 +1,7 @@
-import { Koa } from 'koa';
+import Koa from 'koa';
 const app = new Koa();
 
 // logger
-
 app.use(async (ctx, next) => {
   await next();
   const rt = ctx.response.get('X-Response-Time');
@@ -10,7 +9,6 @@ app.use(async (ctx, next) => {
 });
 
 // x-response-time
-
 app.use(async (ctx, next) => {
   const start = Date.now();
   await next();
@@ -19,7 +17,6 @@ app.use(async (ctx, next) => {
 });
 
 // response
-
 app.use(async ctx => {
   ctx.body = 'Hello World';
 });

@@ -11,11 +11,13 @@ import { TemplateKind } from './templates.js';
 export function get_target_kinds(kind) {
   switch (kind) {
     case TemplateKind.SERVICE:
-      return ['lint', 'build', 'test', 'e2e', 'serve'];
+      //return ['lint', 'build', 'test', 'e2e', 'serve'];
+      return ['lint', 'build', 'test'];
     case TemplateKind.CLI:
       return ['lint', 'build', 'test', 'install', 'publish'];
     case TemplateKind.UI:
-      return ['lint', 'build', 'test', 'e2e', 'serve'];
+      //return ['lint', 'build', 'test', 'e2e', 'serve'];
+      return ['lint', 'build', 'test'];
     case TemplateKind.LIB:
       return ['lint', 'build', 'test', 'publish'];
     default:
@@ -126,6 +128,18 @@ export async function load_mono() {
 }
 
 /**
+ * Writes the monojs.json file
+ * @param {MonoStruct} mono - the mono struct to be saved
+ * @returns {Promise<void>} should be void if no error
+ */
+export async function write_mono(mono) {
+  return await fs.writeFile(
+    process.cwd() + '/monojs.json',
+    JSON.stringify(mono, undefined, 2),
+  );
+}
+
+/**
  * @param {string} cmd - this is the cmd for the target
  * @param {string} kind - this is the kind for the target. TargetValues
  * @returns {TargetStruct} returns the target
@@ -158,7 +172,7 @@ export function create_project(path, name, type, publishable) {
   const targets = cmds.map(kind => {
     switch (kind) {
       case 'lint':
-        return create_target(`node ./node_modules/bin/eslint ${path}`, kind);
+        return create_target(`npx eslint ${path}`, kind);
       case 'build':
         return create_target(`node ./monojs/build.js ${path}`, kind);
       case 'test':
