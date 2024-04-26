@@ -10,5 +10,4 @@ const es = esbuild.build({
   minify: true,
 });
 
-await cp;
-await es;
+await Promise.all([cp, es]);
