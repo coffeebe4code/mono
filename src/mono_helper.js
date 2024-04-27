@@ -61,6 +61,19 @@ function get_order(val) {
 }
 
 /**
+ * Represents the Dependency Builder structure
+ * @typedef {object} BuilderStruct
+ * @property {number | undefined} project_index - project index
+ * @property {number | undefined} lint - lint index
+ * @property {number | undefined} build - build index
+ * @property {number | undefined} test - test index
+ * @property {number | undefined} e2e - e2e index
+ * @property {number | undefined} install - install index
+ * @property {number | undefined} publish - publish index
+ * @property {number | undefined} serve - serve index
+ */
+
+/**
  * Represents the Runs structure
  * @typedef {object} RunsStruct
  * @property {string[]} lint - lints to be ran
@@ -212,6 +225,129 @@ export function project_exists(mono, name) {
 }
 
 /**
+ * @param {MonoStruct} mono - this is the MonoStruct object
+ * @param {string} dep_up_name - this is the name of the project for upper dep
+ * @param {string} dep_down_name - this is the name of the project for down dep
+ * @returns {MonoStruct} returns the modified mono struct
+ */
+export function structure_graph(mono, dep_up_name, dep_down_name) {
+  let processed = 0;
+  /** @type {BuilderStruct} */
+  let builder_top = {
+    project_index: undefined,
+    lint: undefined,
+    build: undefined,
+    test: undefined,
+    e2e: undefined,
+    install: undefined,
+    publish: undefined,
+    serve: undefined,
+  };
+  /** @type {BuilderStruct} */
+  let builder_bot = {
+    project_index: undefined,
+    lint: undefined,
+    build: undefined,
+    test: undefined,
+    e2e: undefined,
+    install: undefined,
+    publish: undefined,
+    serve: undefined,
+  };
+  for (const [p_index, val] of mono.projects.entries()) {
+    if (processed === 2) {
+      break;
+    }
+    if (val.name === dep_up_name) {
+      builder_top.project_index = p_index;
+      for (const [i, t] of val.targets.entries()) {
+        Object.keys(builder_top).forEach(key => {
+          if (key === t.kind) {
+            // @ts-ignore
+            builder_top[key] = i;
+          }
+        });
+      }
+      processed++;
+    } else if (val.name === dep_down_name) {
+      builder_bot.project_index = p_index;
+      for (const [i, t] of val.targets.entries()) {
+        Object.keys(builder_bot).forEach(key => {
+          if (key === t.kind) {
+            // @ts-ignore
+            builder_bot[key] = i;
+          }
+        });
+      }
+      processed++;
+    }
+  }
+
+  Object.entries(builder_top).forEach(([key, value]) => {
+    if (value === undefined || !key) {
+      return;
+    }
+    if (key === 'lint') {
+      add_dependency(
+        mono.projects[builder_top.project_index],
+        mono.projects[builder_bot.project_index],
+        mono.projects[builder_top.project_index].targets[value],
+        mono.projects[builder_bot.project_index].targets[builder_bot.lint],
+      );
+    } else if (key === 'build') {
+      add_dependency(
+        mono.projects[builder_top.project_index],
+        mono.projects[builder_bot.project_index],
+        mono.projects[builder_top.project_index].targets[value],
+        mono.projects[builder_bot.project_index].targets[builder_bot.build],
+      );
+    } else if (key === 'test') {
+      add_dependency(
+        mono.projects[builder_top.project_index],
+        mono.projects[builder_bot.project_index],
+        mono.projects[builder_top.project_index].targets[value],
+        mono.projects[builder_bot.project_index].targets[builder_bot.build],
+      );
+    } else if (key === 'e2e') {
+      add_dependency(
+        mono.projects[builder_top.project_index],
+        mono.projects[builder_bot.project_index],
+        mono.projects[builder_top.project_index].targets[value],
+        mono.projects[builder_bot.project_index].targets[builder_bot.test],
+      );
+    } else if (key === 'install') {
+      if (builder_bot.install) {
+        add_dependency(
+          mono.projects[builder_top.project_index],
+          mono.projects[builder_bot.project_index],
+          mono.projects[builder_top.project_index].targets[value],
+          mono.projects[builder_bot.project_index].targets[builder_bot.install],
+        );
+      }
+    } else if (key === 'publish') {
+      if (builder_bot.publish) {
+        add_dependency(
+          mono.projects[builder_top.project_index],
+          mono.projects[builder_bot.project_index],
+          mono.projects[builder_top.project_index].targets[value],
+          mono.projects[builder_bot.project_index].targets[builder_bot.publish],
+        );
+      }
+    } else if (key === 'serve') {
+      if (builder_bot.serve) {
+        add_dependency(
+          mono.projects[builder_top.project_index],
+          mono.projects[builder_bot.project_index],
+          mono.projects[builder_top.project_index].targets[value],
+          mono.projects[builder_bot.project_index].targets[builder_bot.serve],
+        );
+      }
+    }
+  });
+  return mono;
+}
+
+/**
  * @param {ProjectStruct} up_project - this is the project receiving the dependency
  * @param {ProjectStruct} down_project  this is the project that is becoming an upstream dependency
  * @param {TargetStruct} up_target - this is the higher target
@@ -230,8 +366,8 @@ export function add_dependency(up_project, down_project, up_target, down_target)
     uuid: down_target.uuid,
   };
 
-  up_target.dependencies_down.push(bottom_dep);
-  down_target.dependencies_up.push(top_dep);
+  up_target.dependencies_down.push(top_dep);
+  down_target.dependencies_up.push(bottom_dep);
 }
 
 /**

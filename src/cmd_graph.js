@@ -1,4 +1,4 @@
-import { load_mono } from './mono_helper.js';
+import { load_mono, project_exists, structure_graph, write_mono } from './mono_helper.js';
 let error_code = 0;
 
 /**
@@ -35,34 +35,39 @@ export async function cmd_graph(args) {
       `);
   }
   if (error_code > 0) {
-    process.exit(1);
+    process.exit(error_code);
   }
 
   let mono = load_mono()
-    .then(m => {
-      let processed = 0;
+    .then(async m => {
       if (show) {
         console.info('not implemented yet');
       } else {
-        for (const p of m.projects) {
-          // todo:: make sure all projects are ready first. then go through targets and make the deps
-          if (processed === 2) {
-            // add logic in here after we have both ready
-            break;
-          }
-          if (p.name === name) {
-            // dep down
-            processed++;
-          } else if (p.name === depends) {
-            // dep up
-            processed++;
-          }
+        const top = project_exists(m, name);
+        const bot = project_exists(m, depends);
+        if (!top || !bot) {
+          console.error(`!expected projects to exist
+      suggestions:
+      - ensure you typed the names correctly
+      - ${name} exists: ${!!top}
+      - ${depends} exists: ${!!bot}`);
+          error_code += 1;
+          throw Error('error');
         }
+        m = structure_graph(m, name, depends);
+        return await write_mono(m);
       }
     })
     .catch(inc_error);
 
   await mono;
+
+  if (error_code > 0) {
+    console.error(
+      '!critical issues have happened during destructive file operations from above error. You must restore the current working branch and resolve the above error',
+    );
+    process.exit(error_code);
+  }
 }
 
 /**
