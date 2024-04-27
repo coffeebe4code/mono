@@ -3,6 +3,7 @@
 import mini from 'minimist';
 import { cmd_init } from './cmd_init.js';
 import { cmd_add } from './cmd_add.js';
+import { cmd_graph } from './cmd_graph.js';
 import * as templates from './templates.js';
 
 const commands = {
@@ -64,6 +65,10 @@ const commands = {
   test: {
     help: `
     monojs test`,
+  },
+  e2e: {
+    help: `
+    monojs e2e`,
   },
   project: {
     help: `
@@ -128,7 +133,20 @@ ${templates.get_templates().reduce((acc, val) => {
   },
   graph: {
     help: `
-    monojs graph <options>`,
+    monojs graph {project} <options>
+    examples:
+      \`monojs graph my-app --show\` - shows the graph dependencies
+      \`monojs graph my-app --depends-on @org/shopping-cart - adds a dependency on @org/shopping-cart
+
+    project:
+    {name}        ......... the name of the project to do various graph tasks
+
+    options:
+    --show        ......... shows the graph of dependencies of a project if name provided
+                            otherwise shows all dependencies
+    -s            ......... alias of --show
+    --depends-on  ......... adds a downstream dependency on the project provided
+    -d            ......... alias of --depends-on`,
   },
   help: {
     help: `monojs [command] <options>
@@ -185,7 +203,14 @@ async function main() {
       await cmd_init();
       break;
     case 'graph':
-      console.info(commands.graph.help);
+      if (args.help) {
+        console.info(commands.graph.help);
+        process.exit(0);
+      }
+      await cmd_graph(args);
+      break;
+    case 'e2e':
+      console.info(commands.e2e.help);
       break;
     case 'help':
       console.info(commands.help.help);

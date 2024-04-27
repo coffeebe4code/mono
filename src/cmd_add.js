@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 import * as v from './validations.js';
 import * as t from './templates.js';
-import { create_project, load_mono, write_mono } from './mono_helper.js';
+import { project_exists, create_project, load_mono, write_mono } from './mono_helper.js';
 
 let error_code = 0;
 
@@ -106,6 +106,13 @@ export async function cmd_add(args) {
 
   const monojs = load_mono()
     .then(async (/** @type {import('./mono_helper.js').MonoStruct} */ mono) => {
+      if (project_exists(mono, name)) {
+        console.error(`!expected ${name} to not exist in project tree
+        suggestions:
+        - choose a different project name
+        - a project cannot share the same name across types services, apps, clis, etc`);
+        throw Error('error');
+      }
       let proj = create_project('./' + resolved_dir, name, template_loc, publish);
       mono.projects.push(proj);
       write_mono(mono);
@@ -125,6 +132,9 @@ export async function cmd_add(args) {
   await Promise.all([installs, monojs, tsconfig]);
 
   if (error_code > 0) {
+    console.error(
+      '!critical issues have happened during destructive file operations from above error. You must restore the current working branch and resolve the above error',
+    );
     process.exit(error_code);
   }
 }

@@ -198,6 +198,20 @@ export function create_project(path, name, type, publishable) {
 }
 
 /**
+ * @param {MonoStruct} mono - this is the MonoStruct object
+ * @param {string} name - this is the name to search for
+ * @returns {boolean} returns true if a project exists with that name
+ */
+export function project_exists(mono, name) {
+  for (const p of mono.projects) {
+    if (p.name === name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * @param {ProjectStruct} up_project - this is the project receiving the dependency
  * @param {ProjectStruct} down_project  this is the project that is becoming an upstream dependency
  * @param {TargetStruct} up_target - this is the higher target
