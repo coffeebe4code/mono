@@ -181,7 +181,11 @@ async function main() {
       console.info(commands.upgrade.help);
       break;
     case 'build':
-      console.info(commands.build.help);
+      if (args.help) {
+        console.info(commands.build.help);
+        process.exit(0);
+      }
+      await cmd_build(args);
       break;
     case 'touch':
       console.info(commands.touch.help);
@@ -233,3 +237,7 @@ main()
   .catch(() => {
     process.exit(255);
   });
+
+function cmd_build(args) {
+  throw new Error('Function not implemented.');
+}

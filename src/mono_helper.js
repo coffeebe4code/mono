@@ -213,15 +213,15 @@ export function create_project(path, name, type, publishable) {
 /**
  * @param {MonoStruct} mono - this is the MonoStruct object
  * @param {string} name - this is the name to search for
- * @returns {boolean} returns true if a project exists with that name
+ * @returns {ProjectStruct | undefined} returns true if a project exists with that name
  */
 export function project_exists(mono, name) {
   for (const p of mono.projects) {
     if (p.name === name) {
-      return true;
+      return p;
     }
   }
-  return false;
+  return undefined;
 }
 
 /**
@@ -374,7 +374,7 @@ export function add_dependency(up_project, down_project, up_target, down_target)
  * @param {MonoStruct} mono - this is the mono struct object
  * @param {ProjectStruct} project - this is the project getting ran
  * @param {string} kind - this is the project that is becoming an upstream dependency
- * @returns {RunsStruct} returns an array of command arrays to be ran in parallel
+ * @returns {RunsStruct} returns an array of command arrays to be ran
  */
 export function get_run_chain_top(mono, project, kind) {
   //* @type {RunsStruct} */
@@ -399,7 +399,7 @@ export function get_run_chain_top(mono, project, kind) {
  * @param {ProjectStruct} project - this is the project getting ran
  * @param {string} kind - this is the project that is becoming an upstream dependency
  * @param {string[]} processed - this is the array of already processed target guids
- * @param {RunsStruct} result - an array of command arrays to be ran in parallel
+ * @param {RunsStruct} result - an array of command arrays to be ran
  * @returns {RunsStruct} returns result
  */
 export function get_run_chain_top_rec(mono, project, kind, processed, result) {
