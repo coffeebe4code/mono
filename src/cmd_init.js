@@ -7,7 +7,7 @@ let error_code = 0;
  *
  */
 export async function cmd_init() {
-  const gitignore = v.gitignore_exists().catch(inc_error);
+  //  const gitignore = v.gitignore_exists().catch(inc_error);
   const gitdir = v.git_dir_exists().catch(inc_error);
   const package_file = v.package_exists().catch(inc_error);
   const readdir = fs
@@ -37,7 +37,7 @@ monojs has an opinionated setup, and wants to manage those files for the initial
     })
     .catch(inc_error);
 
-  await gitignore;
+  // await gitignore;
   await gitdir;
   await package_file;
   await readdir;
@@ -95,9 +95,7 @@ dist`,
 }
 
 /**
- * @param {any} err - the error from the callback
  */
-function inc_error(err) {
+function inc_error() {
   error_code += 1;
-  console.error(err);
 }

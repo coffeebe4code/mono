@@ -41,6 +41,7 @@ export async function cmd_build(args) {
           for (const c of cmds.lint) {
             const split = c.split(' ');
             const child = spawn(split[0], split.slice(1, split.length - 1));
+            Promise.all([child]);
           }
 
           break;

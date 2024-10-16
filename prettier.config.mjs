@@ -8,6 +8,7 @@ const config = {
   printWidth: 90,
   useTabs: false,
   arrowParens: 'avoid',
+  endOfLine: 'auto',
 };
 
 export default config;

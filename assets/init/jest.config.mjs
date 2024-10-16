@@ -3,7 +3,7 @@ const config = {
   bail: 1,
   cacheDirectory: '.mono-cache/jest_rs',
   clearMocks: true,
-  maxWorkers: '50%',
+  maxWorkers: '70%',
 };
 
 export default config;

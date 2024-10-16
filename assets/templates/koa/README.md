@@ -7,3 +7,7 @@ This project was generated using monojs cli `add` command.
 ## How to start
 
 run `monojs serve {{ project_name }}`
+
+## How to build
+
+run `monojs build {{ project_name }}`

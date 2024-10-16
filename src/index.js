@@ -4,6 +4,7 @@ import mini from 'minimist';
 import { cmd_init } from './cmd_init.js';
 import { cmd_add } from './cmd_add.js';
 import { cmd_graph } from './cmd_graph.js';
+import { cmd_build } from './cmd_build.js';
 import * as templates from './templates.js';
 
 const commands = {
@@ -157,6 +158,7 @@ ${templates.get_templates().reduce((acc, val) => {
     commands:
     touch   ............. trigger all dependent upstream projects targets to run
     build   ............. builds a specified project
+    add     ............. adds a new project to the workspace based on a predefined template
     lint    ............. runs all analysis against a project
     test    ............. runs all tests against a project
     init    ............. turns the current directory into a monojs monorepo
@@ -183,8 +185,9 @@ async function main() {
     case 'build':
       if (args.help) {
         console.info(commands.build.help);
-        process.exit(0);
+        return;
       }
+
       await cmd_build(args);
       break;
     case 'touch':
@@ -197,6 +200,10 @@ async function main() {
       console.info(commands.test.help);
       break;
     case 'add':
+      if (args.help) {
+        console.info(commands.add.help);
+        return;
+      }
       await cmd_add(args);
       break;
     case 'init':
@@ -232,12 +239,6 @@ async function main() {
   }
 }
 
-main()
-  .then(() => {})
-  .catch(() => {
-    process.exit(255);
-  });
-
-function cmd_build(args) {
-  throw new Error('Function not implemented.');
-}
+main().catch(() => {
+  process.exit(255);
+});
