@@ -55,13 +55,25 @@ async function append_file(file_dir, text) {
  * @returns { Promise<void> } validates
  */
 async function npm_install(installs) {
-  return exec(installs)
-    .then(async (/** @type {{stderr:string}} */ { stderr }) => {
-      if (stderr.length > 1) {
-        critical_error(`npm failed with a stderr log\n${stderr}`);
+  return new Promise((res, rej) => {
+    const ins = execCb(installs);
+    ins.stdout.on('data', data => {
+      process.stdout.write(data);
+    });
+    ins.stderr.on('data', data => {
+      process.stderr.write(data);
+    });
+    ins.on('close', code => {
+      if (code !== 0) {
+        rej(new Error(`npm install failed with exit code ${code}`));
+      } else {
+        res();
       }
-    })
-    .catch(e => suggestions(e, npm_suggestions));
+    });
+    ins.on('error', err => {
+      rej(err);
+    });
+  }).catch(e => suggestions(e, npm_suggestions));
 }
 
 /**
