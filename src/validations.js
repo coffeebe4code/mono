@@ -4,6 +4,30 @@ import { promisify } from 'node:util';
 
 const exec = promisify(execCb);
 
+const git_suggestions = `
+    suggestions:
+    - ensure git is installed
+    - ensure there is an existing .git folder and .gitignore file
+    - ensure this command was ran at root of repository
+    - ensure the current working tree is clean
+`;
+
+const npm_suggestions = `
+    suggestions:
+    - ensure you have node/npm installed
+    - ensure there is enough space on your machine
+    - ensure there is an existing package.json file
+    - ensure this command was ran at root of repository
+    - ensure that npm init was ran in this repository
+`;
+
+const mono_suggestions = `
+    suggestions:
+    - ensure you have monojs installed
+    - ensure there is an existing monojs.json file
+    - ensure this command was ran at root of repository
+`;
+
 /**
  * @returns { Promise<void> } validates
  */
@@ -11,12 +35,10 @@ async function git_clean() {
   return exec('git status -s')
     .then(async (/** @type {{stdout:string}} */ { stdout }) => {
       if (stdout.length > 1) {
-        console.error(`!expected a clean working branch
-          please handle all local pending changes in your current branch.`);
-        throw Error('clean working directory error');
+        critical_error('clean working directory error');
       }
     })
-    .catch(git_clean_suggestion);
+    .catch(e => suggestions(e, git_suggestions));
 }
 
 /**
@@ -36,108 +58,65 @@ async function npm_install(installs) {
   return exec(installs)
     .then(async (/** @type {{stderr:string}} */ { stderr }) => {
       if (stderr.length > 1) {
-        critical_error(`!npm failed with a stderr log\n${stderr}`);
+        critical_error(`npm failed with a stderr log\n${stderr}`);
       }
     })
-    .catch(npm_suggestion);
+    .catch(e => suggestions(e, npm_suggestions));
 }
 
 /**
  * @returns { Promise<void> } validates
  */
 async function gitignore_exists() {
-  return fs.access('./.gitignore').catch(git_suggestion);
+  return fs.access('./.gitignore').catch(e => suggestions(e, git_suggestions));
 }
 
 /**
  * @returns { Promise<void> } validates
  */
 async function mono_exists() {
-  return fs.access('monojs.json').catch(git_suggestion);
+  return fs.access('monojs.json').catch(e => suggestions(e, mono_suggestions));
 }
 
 /**
  * @returns { Promise<void> } validates
  */
 async function git_dir_exists() {
-  return fs.access('.git').catch(git_suggestion);
+  return fs.access('./.git').catch(e => suggestions(e, git_suggestions));
 }
 
 /**
  * @returns { Promise<void> } validates
  */
 async function package_exists() {
-  return fs.access('package.json').catch(node_suggestion);
+  return fs.access('package.json').catch(e => suggestions(e, npm_suggestions));
 }
 
 /**
  * @param {any} err - the error from the callback
  */
 function critical_error(err) {
-  console.error(err);
+  console.error(`Error: ${err}`);
   throw err;
 }
 
 /**
  * @param {any} err - the error from the callback
+ * @param {string} suggestion - any suggestions
  */
-function npm_suggestion(err) {
-  console.error(err);
-  console.error(`!expected npm to work
-    suggestions:
-    - ensure there is enough space on your machine
-    - ensure you have node/npm installed
-    - ensure you do not have legacy peer deps with your existing config
-    - ensure that you have enough memory on your machine`);
-  throw err;
-}
-
-/**
- * @param {any} err - the error from the callback
- */
-function node_suggestion(err) {
-  console.error(err);
-  console.error(`!expected to be ran in a node project
-    suggestions:
-    - ensure there is an existing package.json file
-    - ensure this command was ran at root of repository
-    - ensure that npm init was ran in this repository`);
-  throw err;
-}
-
-/**
- * @param {any} err - the error from the callback
- */
-function git_clean_suggestion(err) {
-  console.error(`!expected a clean working branch
-          please handle all local pending changes in your current branch.`);
-  throw err;
-}
-
-/**
- * @param {any} err - the error from the callback
- */
-function git_suggestion(err) {
-  console.error(err);
-  console.error(`!expected to be ran in a git repository
-    suggestions:
-    - ensure there is an existing .git folder and .gitignore file
-    - ensure this command was ran at root of repository
-    - ensure the .gitignore file is not locked by another process
-    - ensure git is installed`);
+function suggestions(err, suggestion) {
+  console.error(`${err}`);
+  console.error(`${suggestion}`);
   throw err;
 }
 
 export {
   git_dir_exists,
   gitignore_exists,
-  git_suggestion,
-  node_suggestion,
-  npm_suggestion,
-  critical_error,
   package_exists,
+  critical_error,
+  suggestions,
   git_clean,
-  git_clean_suggestion,
   npm_install,
   append_file,
   mono_exists,
