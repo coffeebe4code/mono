@@ -1,0 +1,2 @@
+npm i -D @types/uws
+npm i uNetworking/uWebSockets.js#20.51.0

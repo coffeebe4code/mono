@@ -2,6 +2,7 @@ import * as fs from 'node:fs/promises';
 import * as v from './validations.js';
 import * as t from './templates.js';
 import { project_exists, create_project, load_mono, write_mono } from './mono_helper.js';
+/** @typedef {import('./mono_helper.js').MonoStruct} MonoStruct */
 
 /**
  * @param {any} args - the args from command
@@ -57,15 +58,18 @@ export async function cmd_add(args) {
   }
   const resolved_dir = `src/${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
 
-  const loc = fs.access('./' + resolved_dir).then(() => {
-    v.suggestions(
-      `Error: expected ./${resolved_dir} to not exist`,
-      `
+  const loc = fs
+    .access('./' + resolved_dir)
+    .then(() => {
+      v.suggestions(
+        `Error: expected ./${resolved_dir} to not exist`,
+        `
       suggestions:
       - rename the directory and commit those changes
       - if you are not satisfied, you can undo your changes`,
-    );
-  });
+      );
+    })
+    .catch(() => console.log('safe to create'));
 
   await loc;
 
@@ -89,31 +93,31 @@ export async function cmd_add(args) {
   const installs = fs
     .readFile(path + '/installs.txt', { encoding: 'utf8' })
     .then(async data => {
-      const install = v.npm_install(data.trim());
+      const split = data.split('\n');
+      const installD = v.npm_install(split[0].trimEnd());
+      const install = v.npm_install(split[1].trimEnd());
       const del = fs.unlink(path + '/installs.txt');
-      return await Promise.all([install, del]);
+      return await Promise.all([install, installD, del]);
     });
 
-  const monojs = load_mono().then(
-    async (/** @type {import('./mono_helper.js').MonoStruct} */ mono) => {
-      if (project_exists(mono, name)) {
-        v.suggestions(
-          `Error: expected ${name} to not exist in project tree`,
-          `
+  const monojs = load_mono().then(async (/** @type {MonoStruct} */ mono) => {
+    if (project_exists(mono, name)) {
+      v.suggestions(
+        `Error: expected ${name} to not exist in project tree`,
+        `
         suggestions:
         - choose a different project name
         - a project cannot share the same name across types services, apps, clis, etc`,
-        );
-      }
-      let proj = create_project('./' + resolved_dir, name, template_loc, publish);
-      mono.projects.push(proj);
-      write_mono(mono);
-    },
-  );
+      );
+    }
+    let proj = create_project('./' + resolved_dir, name, template_loc, publish);
+    mono.projects.push(proj);
+    write_mono(mono);
+  });
 
   const tsconfig = fs
     .readFile('./tsconfig.json', { encoding: 'utf8' })
-    .then(async (/** @type {any} */ data) => {
+    .then(async data => {
       const obj = JSON.parse(data);
       obj.compilerOptions.paths = obj.compilerOptions.paths || {};
       obj.compilerOptions.paths[name] = [`./${resolved_dir}/*`];

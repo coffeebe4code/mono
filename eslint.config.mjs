@@ -14,6 +14,12 @@ export default [
   {
     files: ['src/**/*.js'],
     languageOptions: { globals: { ...globals.node } },
+    rules: {
+      'jsdoc/require-param': 'warn',
+      'jsdoc/require-param-type': ['error'],
+      'jsdoc/require-returns': 'warn',
+      'jsdoc/require-returns-type': ['error'],
+    },
   },
   {
     ignores: ['bin/*', 'assets/*'],

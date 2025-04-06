@@ -1,1 +1,2 @@
-npm i koa -D @types/koa
+npm i -D @types/koa
+npm i koa
