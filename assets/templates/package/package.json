@@ -1,0 +1,19 @@
+{
+  "name": "{{project_name}}",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier . --check",
+    "jest": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "tsc": "tsc",
+    "build": "node esbuild.mjs",
+    "compile": "npm-run-all --parallel lint prettier tsc build jest"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {},
+  "dependencies": {}
+}

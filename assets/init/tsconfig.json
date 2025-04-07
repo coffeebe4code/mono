@@ -8,6 +8,7 @@
     "strict": true,
     "allowJs": true,
     "noEmit": true,
+    "alwaysStrict": true,
     "noImplicitAny": true
   },
   "include": ["packages/**/*.js", "clis/**/*.js", "apps/**/*.js", "services/**/*.js"]

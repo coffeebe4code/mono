@@ -125,4 +125,17 @@ export async function cmd_add(args) {
     });
 
   await Promise.all([installs, monojs, tsconfig]);
+  const files = await fs.readdir(resolved_dir, { recursive: true }).then(async files => {
+    let promises = Array();
+    for (let file in files) {
+      promises.push(
+        fs.readFile(file, { encoding: 'utf8' }).then(async data => {
+          if (data.indexOf('{{') != -1) {
+            const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
+          }
+        }),
+      );
+    }
+  });
+  await files;
 }
