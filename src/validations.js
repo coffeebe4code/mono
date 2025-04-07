@@ -57,17 +57,17 @@ async function append_file(file_dir, text) {
 async function npm_install(installs) {
   return new Promise((res, rej) => {
     const ins = execCb(installs);
-    ins.stdout.on('data', data => {
+    ins.stdout?.on('data', data => {
       process.stdout.write(data);
     });
-    ins.stderr.on('data', data => {
+    ins.stderr?.on('data', data => {
       process.stderr.write(data);
     });
     ins.on('close', code => {
       if (code !== 0) {
         rej(new Error(`npm install failed with exit code ${code}`));
       } else {
-        res();
+        res(code);
       }
     });
     ins.on('error', err => {
@@ -106,6 +106,7 @@ async function package_exists() {
 
 /**
  * @param {any} err - the error from the callback
+ * @returns {never} - throws error
  */
 function critical_error(err) {
   console.error(`Error: ${err}`);
@@ -115,6 +116,7 @@ function critical_error(err) {
 /**
  * @param {any} err - the error from the callback
  * @param {string} suggestion - any suggestions
+ * @returns {never} - not reachable after this point
  */
 function suggestions(err, suggestion) {
   console.error(`${err}`);

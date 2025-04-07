@@ -21,8 +21,8 @@ export async function cmd_add(args) {
       `Error: expected args for name and template option`,
       `
       suggestions:
-      - provide a scoped or unscoped name: ${name} was provided
-      - provide a template: ${template} was provided`,
+      - provide a scoped or unscoped name: {${name}} was provided
+      - provide a template: {${template}} was provided`,
     );
   } else {
     if (name.includes('@') || name.includes('/')) {
@@ -56,7 +56,7 @@ export async function cmd_add(args) {
     - provide one of ${t.get_templates()}`,
     );
   }
-  const resolved_dir = `src/${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
+  const resolved_dir = `${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
 
   const loc = fs
     .access('./' + resolved_dir)

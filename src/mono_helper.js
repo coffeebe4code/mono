@@ -6,22 +6,20 @@ import { TemplateKind } from './templates.js';
 /**
  * Gets the targets for a given template
  * @param {string} kind - the template kind
- * @returns {string[] | undefined} all target kinds needed
+ * @returns {string[] } all target kinds needed
  */
 export function get_target_kinds(kind) {
   switch (kind) {
     case TemplateKind.SERVICE:
-      //return ['lint', 'build', 'test', 'e2e', 'serve'];
       return ['lint', 'build', 'test'];
     case TemplateKind.CLI:
       return ['lint', 'build', 'test', 'install', 'publish'];
-    case TemplateKind.UI:
-      //return ['lint', 'build', 'test', 'e2e', 'serve'];
+    case TemplateKind.APP:
       return ['lint', 'build', 'test'];
-    case TemplateKind.LIB:
+    case TemplateKind.PACKAGE:
       return ['lint', 'build', 'test', 'publish'];
     default:
-      return undefined;
+      return [];
   }
 }
 
@@ -115,7 +113,7 @@ function get_order(val) {
  * Represents the Monojs.json structure
  * @typedef {object} MonoStruct
  * @property {number} version - the version of the js file
- * @property {ProjectStruct[] | undefined} projects - the version of the js file
+ * @property {ProjectStruct[]} projects - the version of the js file
  */
 
 /**
@@ -196,7 +194,7 @@ export function create_project(path, name, type, publishable) {
       case 'install':
         return create_target(`npm i ${path} -g`, kind);
       default:
-        return undefined;
+        throw 'Error: unexpected target, internal monojs error';
     }
   });
 
@@ -287,62 +285,62 @@ export function structure_graph(mono, dep_up_name, dep_down_name) {
     if (value === undefined || !key) {
       return;
     }
-    if (key === 'lint') {
-      add_dependency(
-        mono.projects[builder_top.project_index],
-        mono.projects[builder_bot.project_index],
-        mono.projects[builder_top.project_index].targets[value],
-        mono.projects[builder_bot.project_index].targets[builder_bot.lint],
-      );
-    } else if (key === 'build') {
-      add_dependency(
-        mono.projects[builder_top.project_index],
-        mono.projects[builder_bot.project_index],
-        mono.projects[builder_top.project_index].targets[value],
-        mono.projects[builder_bot.project_index].targets[builder_bot.build],
-      );
-    } else if (key === 'test') {
-      add_dependency(
-        mono.projects[builder_top.project_index],
-        mono.projects[builder_bot.project_index],
-        mono.projects[builder_top.project_index].targets[value],
-        mono.projects[builder_bot.project_index].targets[builder_bot.build],
-      );
-    } else if (key === 'e2e') {
-      add_dependency(
-        mono.projects[builder_top.project_index],
-        mono.projects[builder_bot.project_index],
-        mono.projects[builder_top.project_index].targets[value],
-        mono.projects[builder_bot.project_index].targets[builder_bot.test],
-      );
-    } else if (key === 'install') {
-      if (builder_bot.install) {
-        add_dependency(
-          mono.projects[builder_top.project_index],
-          mono.projects[builder_bot.project_index],
-          mono.projects[builder_top.project_index].targets[value],
-          mono.projects[builder_bot.project_index].targets[builder_bot.install],
-        );
-      }
-    } else if (key === 'publish') {
-      if (builder_bot.publish) {
-        add_dependency(
-          mono.projects[builder_top.project_index],
-          mono.projects[builder_bot.project_index],
-          mono.projects[builder_top.project_index].targets[value],
-          mono.projects[builder_bot.project_index].targets[builder_bot.publish],
-        );
-      }
-    } else if (key === 'serve') {
-      if (builder_bot.serve) {
-        add_dependency(
-          mono.projects[builder_top.project_index],
-          mono.projects[builder_bot.project_index],
-          mono.projects[builder_top.project_index].targets[value],
-          mono.projects[builder_bot.project_index].targets[builder_bot.serve],
-        );
-      }
-    }
+    //if (key === 'lint') {
+    //  add_dependency(
+    //    mono.projects[builder_top!.project_index],
+    //    mono.projects[builder_bot?.project_index],
+    //    mono.projects[builder_top?.project_index].targets[value],
+    //    mono.projects[builder_bot?.project_index].targets[builder_bot.lint],
+    //  );
+    //} else if (key === 'build') {
+    //  add_dependency(
+    //    mono.projects[builder_top.project_index],
+    //    mono.projects[builder_bot.project_index],
+    //    mono.projects[builder_top.project_index].targets[value],
+    //    mono.projects[builder_bot.project_index].targets[builder_bot.build],
+    //  );
+    //} else if (key === 'test') {
+    //  add_dependency(
+    //    mono.projects[builder_top.project_index],
+    //    mono.projects[builder_bot.project_index],
+    //    mono.projects[builder_top.project_index].targets[value],
+    //    mono.projects[builder_bot.project_index].targets[builder_bot.build],
+    //  );
+    //} else if (key === 'e2e') {
+    //  add_dependency(
+    //    mono.projects[builder_top.project_index],
+    //    mono.projects[builder_bot.project_index],
+    //    mono.projects[builder_top.project_index].targets[value],
+    //    mono.projects[builder_bot.project_index].targets[builder_bot.test],
+    //  );
+    //} else if (key === 'install') {
+    //  if (builder_bot.install) {
+    //    add_dependency(
+    //      mono.projects[builder_top.project_index],
+    //      mono.projects[builder_bot.project_index],
+    //      mono.projects[builder_top.project_index].targets[value],
+    //      mono.projects[builder_bot.project_index].targets[builder_bot.install],
+    //    );
+    //  }
+    //} else if (key === 'publish') {
+    //  if (builder_bot.publish) {
+    //    add_dependency(
+    //      mono.projects[builder_top.project_index],
+    //      mono.projects[builder_bot.project_index],
+    //      mono.projects[builder_top.project_index].targets[value],
+    //      mono.projects[builder_bot.project_index].targets[builder_bot.publish],
+    //    );
+    //  }
+    //} else if (key === 'serve') {
+    //  if (builder_bot.serve) {
+    //    add_dependency(
+    //      mono.projects[builder_top.project_index],
+    //      mono.projects[builder_bot.project_index],
+    //      mono.projects[builder_top.project_index].targets[value],
+    //      mono.projects[builder_bot.project_index].targets[builder_bot.serve],
+    //    );
+    //  }
+    //}
   });
   return mono;
 }

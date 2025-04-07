@@ -1,17 +1,15 @@
 const TemplateKind = {
   SERVICE: 'services',
   CLI: 'clis',
-  UI: 'apps',
-  MOBILE: 'mobile',
-  LIB: 'libs',
+  APP: 'apps',
+  PACKAGE: 'packages',
 };
 
 const SupportedTemplates = {
-  //express: TemplateKind.SERVICE,
   koa: TemplateKind.SERVICE,
   uws: TemplateKind.SERVICE,
   cli: TemplateKind.CLI,
-  lib: TemplateKind.LIB,
+  lib: TemplateKind.PACKAGE,
 };
 
 /**

@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "es2022",
-    "target": "es2022",
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "checkJs": true,
+    "strict": true,
     "allowJs": true,
     "noEmit": true,
     "noImplicitAny": true
   },
-  "include": ["src/**/*.js"]
+  "include": ["packages/**/*.js", "clis/**/*.js", "apps/**/*.js", "services/**/*.js"]
 }

@@ -6,18 +6,9 @@ import { cmd_add } from './cmd_add.js';
 import { cmd_graph } from './cmd_graph.js';
 import { cmd_build } from './cmd_build.js';
 import * as templates from './templates.js';
+import { cmd_install } from './cmd_install.js';
 
 const commands = {
-  upgrade: {
-    help: `
-    monojs upgrade
-    examples:
-      \`monojs upgrade\` - upgrades the current workspace to the globally installed version of monojs
-    
-    options:
-    --help      ......... shows this help text
-  `,
-  },
   build: {
     help: `
     monojs build {project} <options>
@@ -36,58 +27,19 @@ const commands = {
     --help      ......... shows this help text
   `,
   },
-  touch: {
+  install: {
     help: `
-    monojs touch {projects} <options>
+    monojs install {project} <options>
     examples:
-      \`monojs touch my-app\`     - runs a build of my-app, and all upstream projects
-      \`monojs touch my-app -n\`  - removes the cache, and runs a build of my-app
-                                    and all upstream projects
-    
-    projects:
-    {name,name} ......... *required* provided name of projects as comma separated list
-                          e.g. \`monojs touch my-app,shopping-cart\`
-
-    options:
-    --no-cache  ......... removes cache, and does a fresh build, and upstream projects
-                          e.g. \`monojs touch my-app --no-cache\`
-    -n          ......... alias of --no-cache
-    --help      ......... shows this help text
-  `,
-  },
-  lint: {
-    help: `
-    monojs lint {project} <options>`,
-  },
-  serve: {
-    help: `
-    monojs serve {project} <options>`,
-  },
-  test: {
-    help: `
-    monojs test`,
-  },
-  e2e: {
-    help: `
-    monojs e2e`,
-  },
-  project: {
-    help: `
-    monojs project {project} <options>
-    examples:
-      \`monojs project shopping-cart -t koa\` - creates a node koa app
-        the project location will be \`./src/services/shopping-cart\`
+      \`monojs install @my-product/api lodash\` - adds lodash as a dependency
+      \`monojs i . -D @types/node\` - adds node types as dev dependencies
 
     project:
-    {name}      ......... *required* name of the project, can be scoped or unscoped
-
+    {name}      ......... *required* name of the project, uses the root scope if there is
+                          one in package.json
     options:
-    --template  ......... *required* generates the project as a certain type.
-                          run \`monojs templates\` to a see a list of supported templates
-    -t          ......... alias of --template
-    --publish   ......... instructs monojs that the project is publishable
-    -p          ......... alias of --publish
-    --help      ......... shows this help text
+    --save-dev  ......... *optional* if the packages to be installed are dev dependencies
+    -D          ......... alias of --save-dev
     `,
   },
   add: {
@@ -156,11 +108,8 @@ ${templates.get_templates().reduce((acc, val) => {
       \`monojs graph --help\` - gets the help text of the graph command
 
     commands:
-    touch   ............. trigger all dependent upstream projects targets to run
-    build   ............. builds a specified project
-    add     ............. adds a new project to the workspace based on a predefined template
-    lint    ............. runs all analysis against a project
-    test    ............. runs all tests against a project
+    install ............. installs packages at root or at workspace members
+    build   ............. builds a specified project add     ............. adds a new project to the workspace based on a predefined template
     init    ............. turns the current directory into a monojs monorepo
     graph   ............. all graph work for a project done with this command
     help    ............. shows this help message. no options available
@@ -179,8 +128,21 @@ async function main() {
     process.exit(0);
   }
   switch (command) {
-    case 'upgrade':
-      console.info(commands.upgrade.help);
+    case 'i':
+      if (args.help) {
+        console.info(commands.install.help);
+        return;
+      }
+
+      await cmd_install(args);
+      break;
+    case 'install':
+      if (args.help) {
+        console.info(commands.install.help);
+        return;
+      }
+
+      await cmd_install(args);
       break;
     case 'build':
       if (args.help) {
@@ -189,15 +151,6 @@ async function main() {
       }
 
       await cmd_build(args);
-      break;
-    case 'touch':
-      console.info(commands.touch.help);
-      break;
-    case 'lint':
-      console.info(commands.lint.help);
-      break;
-    case 'test':
-      console.info(commands.test.help);
       break;
     case 'add':
       if (args.help) {
@@ -219,9 +172,6 @@ async function main() {
         process.exit(0);
       }
       await cmd_graph(args);
-      break;
-    case 'e2e':
-      console.info(commands.e2e.help);
       break;
     case 'help':
       console.info(commands.help.help);
