@@ -56,7 +56,7 @@ export async function cmd_add(args) {
     - provide one of ${t.get_templates()}`,
     );
   }
-  const resolved_dir = `${template_loc}/${scoped_name ? name.split('@')[1] : name}`;
+  const resolved_dir = `${template_loc}/${name}`;
 
   const loc = fs
     .access('./' + resolved_dir)
@@ -79,6 +79,10 @@ export async function cmd_add(args) {
   const git = v.git_dir_exists();
 
   await Promise.all([gitdir, package_file, monojs_file, git]);
+
+  const init = v.npm_init_workspace(name, resolved_dir, scoped_name);
+
+  await init;
 
   const cp = fs.cp(
     __dirname + '/assets/templates/' + template,
@@ -126,16 +130,19 @@ export async function cmd_add(args) {
 
   await Promise.all([installs, monojs, tsconfig]);
   const files = await fs.readdir(resolved_dir, { recursive: true }).then(async files => {
+    /** @type {Promise<void>[]} */
     let promises = Array();
     for (let file in files) {
       promises.push(
         fs.readFile(file, { encoding: 'utf8' }).then(async data => {
           if (data.indexOf('{{') != -1) {
             const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
+            await fs.writeFile(file, replaced, { encoding: 'utf8' });
           }
         }),
       );
     }
+    await Promise.all(promises);
   });
   await files;
 }

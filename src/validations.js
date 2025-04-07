@@ -28,6 +28,13 @@ const mono_suggestions = `
     - ensure this command was ran at root of repository
 `;
 
+const mono_not_suggestions = `
+    suggestions:
+    - ensure you have monojs installed
+    - ensure there is not an existing monojs.json file
+    - ensure this command was ran at root of repository
+`;
+
 /**
  * @returns { Promise<void> } validates
  */
@@ -48,6 +55,17 @@ async function git_clean() {
  */
 async function append_file(file_dir, text) {
   return fs.appendFile(file_dir, text, 'utf8').catch(critical_error);
+}
+
+/**
+ * @param { string } name - the name scoped or unscoped
+ * @param { string } resolved_dir - the directory location
+ * @param { boolean } is_scoped - scoped portion, needs --scope
+ * @returns { Promise<{stdout:string, stderr:string}> } validates
+ */
+async function npm_init_workspace(name, resolved_dir, is_scoped) {
+  const rem = is_scoped ? ` --scope ${name.slice(1).split('/')[0]}` : '';
+  return exec(`npm init -y -w ${resolved_dir}${rem}`);
 }
 
 /**
@@ -93,6 +111,15 @@ async function mono_exists() {
 /**
  * @returns { Promise<void> } validates
  */
+async function mono_not_exists() {
+  return fs
+    .access('monojs.json')
+    .then(() => suggestions('Error: monojs.json found error', mono_not_suggestions))
+    .catch(() => console.log('not in monojs repo'));
+}
+/**
+ * @returns { Promise<void> } validates
+ */
 async function git_dir_exists() {
   return fs.access('./.git').catch(e => suggestions(e, git_suggestions));
 }
@@ -127,6 +154,7 @@ function suggestions(err, suggestion) {
 export {
   git_dir_exists,
   gitignore_exists,
+  npm_init_workspace,
   package_exists,
   critical_error,
   suggestions,
@@ -134,4 +162,5 @@ export {
   npm_install,
   append_file,
   mono_exists,
+  mono_not_exists,
 };

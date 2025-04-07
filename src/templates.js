@@ -8,8 +8,8 @@ const TemplateKind = {
 const SupportedTemplates = {
   koa: TemplateKind.SERVICE,
   uws: TemplateKind.SERVICE,
-  cli: TemplateKind.CLI,
-  lib: TemplateKind.PACKAGE,
+  mini: TemplateKind.CLI,
+  package: TemplateKind.PACKAGE,
 };
 
 /**

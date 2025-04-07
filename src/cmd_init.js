@@ -20,17 +20,7 @@ dist
  *
  */
 export async function cmd_init() {
-  const mono = v
-    .mono_exists()
-    .then(() =>
-      v.suggestions(
-        `Error: already in a monojs repo`,
-        `
-    suggestions:
-    - ensure you are in the correct directory or project`,
-      ),
-    )
-    .catch(() => console.log('checking git and npm'));
+  const mono = v.mono_not_exists();
 
   await mono;
 
