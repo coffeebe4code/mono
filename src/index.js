@@ -58,8 +58,6 @@ const commands = {
     --template  ......... *required* generates the project as a certain type.
                           run \`monojs templates\` to a see a list of supported templates
     -t          ......... alias of --template
-    --publish   ......... instructs monojs that the project is publishable
-    -p          ......... alias of --publish
     --help      ......... shows this help text
     `,
   },

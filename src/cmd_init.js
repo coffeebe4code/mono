@@ -56,7 +56,7 @@ export async function cmd_init() {
 
   console.info('installing necessary npm dev dependencies. this could take a minute');
   const npm = v.npm_install(
-    'npm install -D eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest',
+    'npm install -D esbuild eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest',
   );
   await npm;
 

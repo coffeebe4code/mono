@@ -2,6 +2,7 @@ import * as fs from 'node:fs/promises';
 // @ts-ignore
 import { v4 } from 'uuid';
 import { TemplateKind } from './templates.js';
+import * as v from './validations';
 
 /**
  * Gets the targets for a given template
@@ -11,13 +12,13 @@ import { TemplateKind } from './templates.js';
 export function get_target_kinds(kind) {
   switch (kind) {
     case TemplateKind.SERVICE:
-      return ['lint', 'build', 'test'];
+      return ['lint', 'build', 'test', 'serve'];
     case TemplateKind.CLI:
-      return ['lint', 'build', 'test', 'install', 'publish'];
+      return ['lint', 'build', 'test', 'install'];
     case TemplateKind.APP:
       return ['lint', 'build', 'test'];
     case TemplateKind.PACKAGE:
-      return ['lint', 'build', 'test', 'publish'];
+      return ['lint', 'build', 'test'];
     default:
       return [];
   }
@@ -27,9 +28,7 @@ export const TargetValues = {
   LINT: 'lint',
   BUILD: 'build',
   TEST: 'test',
-  E2E: 'e2e',
   INSTALL: 'install',
-  PUBLISH: 'publish',
   SERVE: 'serve',
 };
 
@@ -45,16 +44,12 @@ function get_order(val) {
       return 1;
     case TargetValues.TEST:
       return 2;
-    case TargetValues.E2E:
-      return 2;
     case TargetValues.INSTALL:
-      return 3;
-    case TargetValues.PUBLISH:
       return 3;
     case TargetValues.SERVE:
       return 2;
     default:
-      return -1;
+      throw 'invalid target value. internal monojs issue';
   }
 }
 
@@ -127,12 +122,13 @@ export async function load_mono() {
       /** @type {MonoStruct} */
       const obj = JSON.parse(data);
       if (obj.version > 0) {
-        console.error(`!expected correct monojs version for monojs file
-        found '${obj.version}' expected version 0
+        v.suggestions(
+          `Error: expected correct monojs version for monojs file
+        found '${obj.version}' expected version 0`,
+          `
         suggestions:
-        - install an older version of monojs globally
-        - or upgrade the current monojs file with \`monojs upgrade\``);
-        throw Error('error');
+        - install an older version of monojs globally`,
+        );
       }
       return obj;
     });
@@ -144,6 +140,7 @@ export async function load_mono() {
  * @returns {Promise<void>} should be void if no error
  */
 export async function write_mono(mono) {
+  console.log('mono', mono);
   return await fs.writeFile(
     process.cwd() + '/monojs.json',
     JSON.stringify(mono, undefined, 2),
@@ -171,14 +168,10 @@ export function create_target(cmd, kind) {
  * @param {string} path - this is the path for the project
  * @param {string} name - this is the name for the project
  * @param {string} type - this is the template type for the project
- * @param {boolean} publishable - this is if publishable
  * @returns {ProjectStruct} returns the project
  */
-export function create_project(path, name, type, publishable) {
+export function create_project(path, name, type) {
   let cmds = get_target_kinds(type);
-  if (!publishable) {
-    cmds = cmds.filter(ele => ele !== 'publish');
-  }
   /** @type {TargetStruct[]} */
   const targets = cmds.map(kind => {
     switch (kind) {

@@ -13,8 +13,6 @@ export async function cmd_add(args) {
   const name = args._[1];
   /** @type {string | undefined} */
   const template = args.template ?? args.t;
-  ///** @type {boolean | undefined} */
-  const publish = args.publish ?? args.p;
 
   if (!name || !template) {
     v.suggestions(
@@ -44,6 +42,8 @@ export async function cmd_add(args) {
       }
     }
   }
+  const clean = v.git_clean();
+  await clean;
 
   const scoped_name = name.includes('@') && name.includes('/');
   const template_loc = t.get_template_kind_path(template);
@@ -84,6 +84,8 @@ export async function cmd_add(args) {
 
   await init;
 
+  console.log('resolved dir', resolved_dir);
+  console.log(`${process.cwd()}/${resolved_dir}`);
   const cp = fs.cp(
     __dirname + '/assets/templates/' + template,
     process.cwd() + '/' + resolved_dir,
@@ -92,17 +94,45 @@ export async function cmd_add(args) {
     },
   );
   await cp;
+  console.log('copy happened');
+  const files = fs
+    .readdir(resolved_dir, { recursive: true })
+    .then(async files => {
+      for (let file of files) {
+        await fs
+          .readFile(`${resolved_dir}/${file}`, { encoding: 'utf8' })
+          .then(async data => {
+            if (data.indexOf('{{') != -1) {
+              const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
+              await fs.writeFile(`${resolved_dir}/${file}`, replaced, {
+                encoding: 'utf8',
+              });
+            }
+          });
+      }
+    })
+    .catch(e => console.log(e));
+  await files;
+  console.log('files');
 
   const path = process.cwd() + '/' + resolved_dir;
   const installs = fs
     .readFile(path + '/installs.txt', { encoding: 'utf8' })
     .then(async data => {
-      const split = data.split('\n');
-      const installD = v.npm_install(split[0].trimEnd());
-      const install = v.npm_install(split[1].trimEnd());
-      const del = fs.unlink(path + '/installs.txt');
-      return await Promise.all([install, installD, del]);
+      if (data.length > 5) {
+        const split = data.split('\n');
+        console.log('split', split);
+        const installD = v.npm_install(split[0].trimEnd());
+        let install = undefined;
+        if (split.length > 1) {
+          install = v.npm_install(split[1].trimEnd());
+        }
+        const del = fs.unlink(path + '/installs.txt');
+        return await Promise.all([install, installD, del]);
+      }
     });
+
+  await installs;
 
   const monojs = load_mono().then(async (/** @type {MonoStruct} */ mono) => {
     if (project_exists(mono, name)) {
@@ -114,7 +144,7 @@ export async function cmd_add(args) {
         - a project cannot share the same name across types services, apps, clis, etc`,
       );
     }
-    let proj = create_project('./' + resolved_dir, name, template_loc, publish);
+    let proj = create_project('./' + resolved_dir, name, template_loc);
     mono.projects.push(proj);
     write_mono(mono);
   });
@@ -128,21 +158,5 @@ export async function cmd_add(args) {
       return fs.writeFile('./tsconfig.json', JSON.stringify(obj, undefined, 2));
     });
 
-  await Promise.all([installs, monojs, tsconfig]);
-  const files = await fs.readdir(resolved_dir, { recursive: true }).then(async files => {
-    /** @type {Promise<void>[]} */
-    let promises = Array();
-    for (let file in files) {
-      promises.push(
-        fs.readFile(file, { encoding: 'utf8' }).then(async data => {
-          if (data.indexOf('{{') != -1) {
-            const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
-            await fs.writeFile(file, replaced, { encoding: 'utf8' });
-          }
-        }),
-      );
-    }
-    await Promise.all(promises);
-  });
-  await files;
+  await Promise.all([monojs, tsconfig]);
 }

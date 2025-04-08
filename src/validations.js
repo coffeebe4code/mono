@@ -65,6 +65,7 @@ async function append_file(file_dir, text) {
  */
 async function npm_init_workspace(name, resolved_dir, is_scoped) {
   const rem = is_scoped ? ` --scope ${name.slice(1).split('/')[0]}` : '';
+  console.log(`npm init -y -w ${resolved_dir}${rem}`);
   return exec(`npm init -y -w ${resolved_dir}${rem}`);
 }
 
