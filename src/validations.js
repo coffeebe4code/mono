@@ -70,6 +70,33 @@ async function npm_init_workspace(name, resolved_dir, is_scoped) {
 }
 
 /**
+ * @param { string } scope - the full npm command
+ * @param { string } target - the workspace
+ * @returns { Promise<number | null> } validates
+ */
+async function npm_run(scope, target) {
+  return new Promise((res, rej) => {
+    const ins = execCb(`npm run ${target} -w ${scope}`);
+    ins.stdout?.on('data', data => {
+      process.stdout.write(data);
+    });
+    ins.stderr?.on('data', data => {
+      process.stderr.write(data);
+    });
+    ins.on('close', code => {
+      if (code !== 0) {
+        rej(new Error(`npm install failed with exit code ${code}`));
+      } else {
+        res(code);
+      }
+    });
+    ins.on('error', err => {
+      rej(err);
+    });
+  });
+}
+
+/**
  * @param { string } installs - the full npm command
  * @returns { Promise<void> } validates
  */
@@ -164,4 +191,5 @@ export {
   append_file,
   mono_exists,
   mono_not_exists,
+  npm_run,
 };

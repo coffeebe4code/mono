@@ -1,6 +1,6 @@
-import { load_mono, project_exists, structure_graph, write_mono } from './mono_helper.js';
+import { add_dependency, load_mono, project_exists, write_mono } from './mono_helper.js';
 
-import { suggestions } from './validations.js';
+import { critical_error, suggestions } from './validations.js';
 
 const project_depends_sug = `
     suggestions:
@@ -23,22 +23,24 @@ export async function cmd_graph(args) {
     );
   }
 
-  let mono = load_mono().then(async m => {
-    const top = project_exists(m, name);
-    const bot = project_exists(m, depends);
-    if (!top || !bot) {
-      suggestions(
-        `Error: expected projects to exist`,
-        `
+  let mono = load_mono()
+    .then(async m => {
+      const top = project_exists(m, name);
+      const bot = project_exists(m, depends);
+      if (!top || !bot) {
+        suggestions(
+          `Error: expected projects to exist`,
+          `
       suggestions:
       - ensure you typed the names correctly
       - ${name} exists: ${!!top}
       - ${depends} exists: ${!!bot}`,
-      );
-    }
-    m = structure_graph(m, name, depends);
-    return await write_mono(m);
-  });
+        );
+      }
+      add_dependency(top, bot);
+      return await write_mono(m);
+    })
+    .catch(e => critical_error(e));
 
   await mono;
 }

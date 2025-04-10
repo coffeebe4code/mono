@@ -29,7 +29,7 @@ const commands = {
   },
   install: {
     help: `
-    monojs install {project} <options>
+    monojs (install | i) {project} <options>
     examples:
       \`monojs install @my-product/api lodash\` - adds lodash as a dependency
       \`monojs i . -D @types/node\` - adds node types as dev dependencies
@@ -84,10 +84,10 @@ ${templates.get_templates().reduce((acc, val) => {
   },
   graph: {
     help: `
-    monojs graph {project} <options>
+    monojs (graph | g) {project} <options>
     examples:
       \`monojs graph my-app --show\` - shows the graph dependencies
-      \`monojs graph my-app --depends-on @org/shopping-cart - adds a dependency on @org/shopping-cart
+      \`monojs g my-app --depends-on @org/shopping-cart - adds a dependency on @org/shopping-cart
 
     project:
     {name}        ......... the name of the project to do various graph tasks
@@ -107,9 +107,11 @@ ${templates.get_templates().reduce((acc, val) => {
 
     commands:
     install ............. installs packages at root or at workspace members
+    i       ............. alias of install
     build   ............. builds a specified project add     ............. adds a new project to the workspace based on a predefined template
     init    ............. turns the current directory into a monojs monorepo
     graph   ............. all graph work for a project done with this command
+    g       ............. alias of graph
     help    ............. shows this help message. no options available
   `,
   },
@@ -127,13 +129,6 @@ async function main() {
   }
   switch (command) {
     case 'i':
-      if (args.help) {
-        console.info(commands.install.help);
-        return;
-      }
-
-      await cmd_install(args);
-      break;
     case 'install':
       if (args.help) {
         console.info(commands.install.help);
@@ -164,6 +159,7 @@ async function main() {
       }
       await cmd_init();
       break;
+    case 'g':
     case 'graph':
       if (args.help) {
         console.info(commands.graph.help);

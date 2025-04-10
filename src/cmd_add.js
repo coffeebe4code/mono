@@ -84,8 +84,6 @@ export async function cmd_add(args) {
 
   await init;
 
-  console.log('resolved dir', resolved_dir);
-  console.log(`${process.cwd()}/${resolved_dir}`);
   const cp = fs.cp(
     __dirname + '/assets/templates/' + template,
     process.cwd() + '/' + resolved_dir,
@@ -94,26 +92,25 @@ export async function cmd_add(args) {
     },
   );
   await cp;
-  console.log('copy happened');
   const files = fs
-    .readdir(resolved_dir, { recursive: true })
+    .readdir(resolved_dir, { recursive: true, withFileTypes: true })
     .then(async files => {
       for (let file of files) {
-        await fs
-          .readFile(`${resolved_dir}/${file}`, { encoding: 'utf8' })
-          .then(async data => {
+        if (file.isFile()) {
+          const path = `${process.cwd()}/${file.path}/${file.name}`;
+          await fs.readFile(path, { encoding: 'utf8' }).then(async data => {
             if (data.indexOf('{{') != -1) {
               const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
-              await fs.writeFile(`${resolved_dir}/${file}`, replaced, {
+              await fs.writeFile(path, replaced, {
                 encoding: 'utf8',
               });
             }
           });
+        }
       }
     })
-    .catch(e => console.log(e));
+    .catch(e => v.critical_error(e));
   await files;
-  console.log('files');
 
   const path = process.cwd() + '/' + resolved_dir;
   const installs = fs
@@ -121,7 +118,6 @@ export async function cmd_add(args) {
     .then(async data => {
       if (data.length > 5) {
         const split = data.split('\n');
-        console.log('split', split);
         const installD = v.npm_install(split[0].trimEnd());
         let install = undefined;
         if (split.length > 1) {
@@ -130,7 +126,8 @@ export async function cmd_add(args) {
         const del = fs.unlink(path + '/installs.txt');
         return await Promise.all([install, installD, del]);
       }
-    });
+    })
+    .catch(e => v.critical_error(e));
 
   await installs;
 

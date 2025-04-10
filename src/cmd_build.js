@@ -1,4 +1,4 @@
-import { get_run_chain_top, load_mono, project_exists } from './mono_helper';
+import { load_mono, project_exists } from './mono_helper';
 import { critical_error, suggestions } from './validations';
 import { spawn } from 'node:child_process';
 
@@ -29,11 +29,9 @@ export async function cmd_build(args) {
     for (const t of project_loaded.targets) {
       if (t.kind === 'build') {
         found = true;
-        const cmds = get_run_chain_top(mono, project_loaded, 'build');
 
-        for (const c of cmds.lint) {
-          const split = c.split(' ');
-          const child = spawn(split[0], split.slice(1, split.length - 1));
+        for (const d of t.dependencies_down) {
+          const loaded = project_exists(mono, d.name);
           Promise.all([child]);
         }
 
