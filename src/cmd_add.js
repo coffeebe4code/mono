@@ -141,7 +141,7 @@ export async function cmd_add(args) {
         - a project cannot share the same name across types services, apps, clis, etc`,
       );
     }
-    let proj = create_project('./' + resolved_dir, name, template_loc);
+    let proj = create_project('./' + resolved_dir, name);
     mono.projects.push(proj);
     write_mono(mono);
   });

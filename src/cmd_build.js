@@ -1,7 +1,5 @@
-import { load_mono, project_exists } from './mono_helper';
+import { run_all_commands, load_mono, project_exists } from './mono_helper';
 import { critical_error, suggestions } from './validations';
-import { spawn } from 'node:child_process';
-
 /**
  * @param {any} args - the args from command
  * @returns {Promise<void>}
@@ -19,7 +17,7 @@ export async function cmd_build(args) {
     );
   }
 
-  const mono_loaded = load_mono().then(mono => {
+  const mono_loaded = load_mono().then(async mono => {
     const project_loaded = project_exists(mono, project);
     if (!project_loaded) {
       critical_error(`!expected a project that exists
@@ -30,11 +28,7 @@ export async function cmd_build(args) {
       if (t.kind === 'build') {
         found = true;
 
-        for (const d of t.dependencies_down) {
-          const loaded = project_exists(mono, d.name);
-          Promise.all([child]);
-        }
-
+        await run_all_commands(mono, project_loaded, 'build');
         break;
       }
     }

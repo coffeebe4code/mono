@@ -186,9 +186,32 @@ export function add_dependency(project, dproject) {
 }
 
 /**
- * @param {any} args - the args from command
+ * @param {MonoStruct} mono - the mono
+ * @param {ProjectStruct} project - the project
+ * @param {string} cmd - the target cmd
  * @returns {Promise<void>}
  */
-function recursively_run(args) {
-  _
+export async function run_all_commands(mono, project, cmd) {
+  /** @type {string[]} */
+  let processed = [];
+  await recursively_run(mono, project, cmd, processed);
+}
+
+/**
+ * @param {MonoStruct} mono - the mono
+ * @param {ProjectStruct} project - the project
+ * @param {string} cmd - the target cmd
+ * @param {string[]} processed - the processed list
+ * @returns {Promise<void>}
+ */
+export async function recursively_run(mono, project, cmd, processed) {
+  //for (const target of targets) {
+  //  const loaded = project_exists(mono, d.name);
+  //  if (loaded) {
+  //    await Promise.all([child]);
+  //  }
+  //}
+  console.log(project);
+  console.log(cmd);
+  console.log(processed);
 }

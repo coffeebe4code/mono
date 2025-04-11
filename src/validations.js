@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises';
-import { exec as execCb } from 'node:child_process';
+import { exec as execCb, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 
 const exec = promisify(execCb);
@@ -74,7 +74,34 @@ async function npm_init_workspace(name, resolved_dir, is_scoped) {
  * @param { string } target - the workspace
  * @returns { Promise<number | null> } validates
  */
-async function npm_run(scope, target) {
+async function npm_run_spawn(scope, target) {
+  return new Promise((res, rej) => {
+    const ins = spawn(`npm`, ['run', target, '-w', scope]);
+    ins.stdout?.on('data', data => {
+      process.stdout.write(data);
+    });
+    ins.stderr?.on('data', data => {
+      process.stderr.write(data);
+    });
+    ins.on('close', code => {
+      if (code !== 0) {
+        rej(`npm run ${target} -w ${scope} failed with exit code ${code}`);
+      } else {
+        res(code);
+      }
+    });
+    ins.on('error', err => {
+      rej(err);
+    });
+  });
+}
+
+/**
+ * @param { string } scope - the full npm command
+ * @param { string } target - the workspace
+ * @returns { Promise<number | null> } validates
+ */
+async function npm_run_exec(scope, target) {
   return new Promise((res, rej) => {
     const ins = execCb(`npm run ${target} -w ${scope}`);
     ins.stdout?.on('data', data => {
@@ -191,5 +218,6 @@ export {
   append_file,
   mono_exists,
   mono_not_exists,
-  npm_run,
+  npm_run_exec,
+  npm_run_spawn,
 };

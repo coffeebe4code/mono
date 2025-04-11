@@ -21,19 +21,16 @@ describe('mono_helper', () => {
     {
       kind: 'lint',
       uuid: 'a',
-      dependencies_up: [],
       dependencies_down: [deps[0], deps[1], deps[2], deps[3]],
     },
     {
       kind: 'build',
       uuid: 'b',
-      dependencies_up: [],
       dependencies_down: [deps[0], deps[1], deps[2], deps[3]],
     },
     {
       kind: 'test',
       uuid: 'c',
-      dependencies_up: [],
       dependencies_down: [],
     },
     // lib 1
@@ -41,18 +38,15 @@ describe('mono_helper', () => {
       kind: 'lint',
       uuid: 'd',
       dependencies_down: [deps[1], deps[3]],
-      dependencies_up: [],
     },
     {
       kind: 'build',
       uuid: 'e',
-      dependencies_up: [],
       dependencies_down: [deps[1], deps[3]],
     },
     {
       kind: 'test',
       uuid: 'f',
-      dependencies_up: [],
       dependencies_down: [],
     },
     // lib 2
@@ -60,18 +54,15 @@ describe('mono_helper', () => {
       kind: 'lint',
       uuid: 'g',
       dependencies_down: [],
-      dependencies_up: [],
     },
     {
       kind: 'build',
       uuid: 'h',
-      dependencies_up: [],
       dependencies_down: [],
     },
     {
       kind: 'test',
       uuid: 'i',
-      dependencies_up: [],
       dependencies_down: [],
     },
   ];
