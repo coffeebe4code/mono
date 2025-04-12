@@ -13,10 +13,10 @@
   "scripts": {
     "lint": "eslint .",
     "prettier": "prettier . --check",
-    "jest": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "tsc": "tsc",
     "build": "node esbuild.mjs",
-    "compile": "npm-run-all --parallel lint prettier tsc build jest"
+    "compile": "npm-run-all --parallel lint prettier tsc build test"
   },
   "author": "",
   "license": "",

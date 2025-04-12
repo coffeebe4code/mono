@@ -133,7 +133,6 @@ export async function cmd_add(args) {
     .catch(e => v.critical_error(e));
 
   await installs;
-  console.log('1');
 
   const monojs = load_mono().then(async (/** @type {MonoStruct} */ mono) => {
     if (project_exists(mono, name)) {
@@ -145,13 +144,9 @@ export async function cmd_add(args) {
         - a project cannot share the same name across types services, apps, clis, etc`,
       );
     }
-    console.log('2');
     let proj = create_project(name, template);
-    console.log('3');
     mono.projects.push(proj);
-    console.log('4');
     write_mono(mono);
-    console.log('5');
   });
 
   const tsconfig = fs
@@ -162,7 +157,6 @@ export async function cmd_add(args) {
       obj.compilerOptions.paths[name] = [`./${resolved_dir}/*`];
       return fs.writeFile('./tsconfig.json', JSON.stringify(obj, undefined, 2));
     });
-  console.log('6');
 
   await Promise.all([monojs, tsconfig]);
 }

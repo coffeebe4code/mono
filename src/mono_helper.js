@@ -139,7 +139,6 @@ export function create_target(kind) {
  */
 export function create_project(name, type) {
   let kinds = get_target_kinds(type);
-  console.log(kinds);
   /** @type {TargetStruct[]} */
   const targets = kinds.map(kind => {
     return create_target(kind);
@@ -176,7 +175,7 @@ export function project_exists(mono, name) {
 export function add_dependency(project, dproject) {
   for (const target of project.targets) {
     for (const dtarget of dproject.targets) {
-      if (get_order(target.kind) > get_order(dtarget.kind)) {
+      if (get_order(target.kind) === get_order(dtarget.kind)) {
         target.dependencies_down.push({
           name: dproject.name,
           uuid: dtarget.uuid,
@@ -189,30 +188,55 @@ export function add_dependency(project, dproject) {
 /**
  * @param {MonoStruct} mono - the mono
  * @param {ProjectStruct} project - the project
- * @param {string} cmd - the target cmd
+ * @param {string} kind - the target cmd
  * @returns {Promise<void>}
  */
-export async function run_all_commands(mono, project, cmd) {
+export async function run_all_commands(mono, project, kind) {
   /** @type {string[]} */
   let processed = [];
-  await recursively_run(mono, project, cmd, processed);
+  const target = project.targets.find(t => t.kind === kind);
+  if (!target) {
+    throw `Error: expected target to exist for project ${project.name}: target ${kind}`;
+  }
+  await recursively_run_target(mono, project, target, processed);
 }
 
 /**
- * @param {MonoStruct} mono - the mono
- * @param {ProjectStruct} project - the project
- * @param {string} cmd - the target cmd
- * @param {string[]} processed - the processed list
+ * @param {MonoStruct} mono - the mono structure
+ * @param {ProjectStruct} project - the current project
+ * @param {TargetStruct} target - the current target to run
+ * @param {string[]} processed - list of processed UUIDs
  * @returns {Promise<void>}
  */
-export async function recursively_run(mono, project, cmd, processed) {
-  //for (const target of targets) {
-  //  const loaded = project_exists(mono, d.name);
-  //  if (loaded) {
-  //    await Promise.all([child]);
-  //  }
-  //}
-  console.log(project);
-  console.log(cmd);
-  console.log(processed);
+export async function recursively_run_target(mono, project, target, processed) {
+  if (processed.includes(target.uuid)) {
+    return;
+  }
+
+  for (const dep of target.dependencies_down) {
+    const dep_proj = mono.projects.find(p => p.name === dep.name);
+    if (!dep_proj) {
+      throw `Error: expected project to exist, target: ${target.uuid} dependency: ${dep.name} `;
+    }
+
+    const dep_target = dep_proj.targets.find(t => t.uuid === dep.uuid);
+    if (!dep_target) {
+      throw `Error: expected target to exist, dependency: ${dep.uuid} dependency: ${dep.name} `;
+    }
+
+    await recursively_run_target(mono, dep_proj, dep_target, processed);
+  }
+  /** @type {{name:string, kind: string, uuid: string}[]} */
+  let this_targets = Array();
+  for (const targ of project.targets) {
+    if (get_order(targ.kind) > get_order(target.kind) || targ.kind === target.kind) {
+      this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
+    }
+  }
+  await Promise.all(
+    this_targets.map(async obj => {
+      v.npm_run_spawn(obj.name, obj.kind); // You must implement this function yourself
+    }),
+  );
+  processed.push(...this_targets.map(obj => obj.uuid));
 }
