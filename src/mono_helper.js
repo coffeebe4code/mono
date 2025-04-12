@@ -40,21 +40,24 @@ import * as v from './validations';
  * @returns {string[] } all target kinds needed
  */
 export function get_target_kinds(kind) {
+  // ensure the order elements in the array is increasing with its get order value
   switch (kind) {
     case TemplateKind.SERVICE:
-      return ['lint', 'build', 'test', 'serve', 'install'];
+      return ['prettier', 'tsc', 'lint', 'build', 'test', 'serve', 'install'];
     case TemplateKind.CLI:
-      return ['lint', 'build', 'test', 'install'];
+      return ['prettier', 'tsc', 'lint', 'build', 'test', 'install'];
     case TemplateKind.APP:
-      return ['lint', 'build', 'test'];
+      return ['prettier', 'tsc', 'lint', 'build', 'test'];
     case TemplateKind.PACKAGE:
-      return ['lint', 'build', 'test'];
+      return ['prettier', 'tsc', 'lint', 'build', 'test'];
     default:
       throw 'Error: internal monojs issue';
   }
 }
 
 export const TargetValues = {
+  PRETTIER: 'prettier',
+  TSC: 'tsc',
   LINT: 'lint',
   BUILD: 'build',
   TEST: 'test',
@@ -68,16 +71,20 @@ export const TargetValues = {
  */
 function get_order(val) {
   switch (val) {
-    case TargetValues.LINT:
+    case TargetValues.PRETTIER:
       return 0;
-    case TargetValues.BUILD:
+    case TargetValues.TSC:
       return 1;
-    case TargetValues.TEST:
+    case TargetValues.LINT:
       return 2;
+    case TargetValues.BUILD:
+      return 3;
+    case TargetValues.TEST:
+      return 4;
     case TargetValues.SERVE:
-      return 3;
+      return 5;
     case TargetValues.INSTALL:
-      return 3;
+      return 5;
     default:
       throw 'invalid target value. internal monojs issue';
   }
