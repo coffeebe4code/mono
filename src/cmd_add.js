@@ -116,6 +116,7 @@ export async function cmd_add(args) {
   const installs = fs
     .readFile(path + '/installs.txt', { encoding: 'utf8' })
     .then(async data => {
+      const del = fs.unlink(path + '/installs.txt');
       if (data.length > 5) {
         const split = data.split('\n');
         const installD = v.npm_install(split[0].trimEnd());
@@ -123,13 +124,16 @@ export async function cmd_add(args) {
         if (split.length > 1) {
           install = v.npm_install(split[1].trimEnd());
         }
-        const del = fs.unlink(path + '/installs.txt');
-        return await Promise.all([install, installD, del]);
+        await installD;
+        await install;
       }
+      await del;
+      return;
     })
     .catch(e => v.critical_error(e));
 
   await installs;
+  console.log('1');
 
   const monojs = load_mono().then(async (/** @type {MonoStruct} */ mono) => {
     if (project_exists(mono, name)) {
@@ -141,9 +145,13 @@ export async function cmd_add(args) {
         - a project cannot share the same name across types services, apps, clis, etc`,
       );
     }
-    let proj = create_project('./' + resolved_dir, name);
+    console.log('2');
+    let proj = create_project(name, template);
+    console.log('3');
     mono.projects.push(proj);
+    console.log('4');
     write_mono(mono);
+    console.log('5');
   });
 
   const tsconfig = fs
@@ -154,6 +162,7 @@ export async function cmd_add(args) {
       obj.compilerOptions.paths[name] = [`./${resolved_dir}/*`];
       return fs.writeFile('./tsconfig.json', JSON.stringify(obj, undefined, 2));
     });
+  console.log('6');
 
   await Promise.all([monojs, tsconfig]);
 }

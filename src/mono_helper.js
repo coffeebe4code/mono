@@ -42,7 +42,7 @@ import * as v from './validations';
 export function get_target_kinds(kind) {
   switch (kind) {
     case TemplateKind.SERVICE:
-      return ['lint', 'build', 'test', 'serve'];
+      return ['lint', 'build', 'test', 'serve', 'install'];
     case TemplateKind.CLI:
       return ['lint', 'build', 'test', 'install'];
     case TemplateKind.APP:
@@ -50,7 +50,7 @@ export function get_target_kinds(kind) {
     case TemplateKind.PACKAGE:
       return ['lint', 'build', 'test'];
     default:
-      return [];
+      throw 'Error: internal monojs issue';
   }
 }
 
@@ -139,6 +139,7 @@ export function create_target(kind) {
  */
 export function create_project(name, type) {
   let kinds = get_target_kinds(type);
+  console.log(kinds);
   /** @type {TargetStruct[]} */
   const targets = kinds.map(kind => {
     return create_target(kind);
@@ -177,7 +178,7 @@ export function add_dependency(project, dproject) {
     for (const dtarget of dproject.targets) {
       if (get_order(target.kind) > get_order(dtarget.kind)) {
         target.dependencies_down.push({
-          name: project.name,
+          name: dproject.name,
           uuid: dtarget.uuid,
         });
       }

@@ -1,15 +1,22 @@
-const TemplateKind = {
+const TemplateFolderKind = {
   SERVICE: 'services',
   CLI: 'clis',
   APP: 'apps',
   PACKAGE: 'packages',
 };
 
+const TemplateKind = {
+  SERVICE: 'service',
+  CLI: 'cli',
+  APP: 'app',
+  PACKAGE: 'package',
+};
+
 const SupportedTemplates = {
-  koa: TemplateKind.SERVICE,
-  uws: TemplateKind.SERVICE,
-  mini: TemplateKind.CLI,
-  package: TemplateKind.PACKAGE,
+  koa: TemplateFolderKind.SERVICE,
+  uws: TemplateFolderKind.SERVICE,
+  mini: TemplateFolderKind.CLI,
+  package: TemplateFolderKind.PACKAGE,
 };
 
 /**
@@ -36,4 +43,10 @@ function get_templates() {
   });
 }
 
-export { TemplateKind, SupportedTemplates, get_template_kind_path, get_templates };
+export {
+  TemplateKind,
+  TemplateFolderKind,
+  SupportedTemplates,
+  get_template_kind_path,
+  get_templates,
+};
