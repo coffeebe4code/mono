@@ -13,7 +13,7 @@ export default [
   jsdoc.configs['flat/recommended'],
   {
     files: ['src/**/*.js'],
-    languageOptions: { globals: { ...globals.node } },
+    languageOptions: { globals: { ...globals.nodeBuiltin } },
     rules: {
       'jsdoc/require-param': 'warn',
       'jsdoc/require-param-type': ['error'],

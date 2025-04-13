@@ -2,7 +2,7 @@ import * as fs from 'node:fs/promises';
 // @ts-ignore
 import { v4 } from 'uuid';
 import { TemplateKind } from './templates.js';
-import * as v from './validations';
+import * as v from './validations.js';
 
 /**
  * Represents the Dependencies structure

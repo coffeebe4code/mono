@@ -35,7 +35,7 @@ export async function cmd_init() {
         x.includes('prettier.config') ||
         x.includes('jest.config') ||
         x.includes('monojs.json') ||
-        x.includes('tsconfig')
+        x.includes('tsconfig.json')
       ) {
         local_error = true;
       }
@@ -64,7 +64,9 @@ export async function cmd_init() {
   const gitignore_write = v.append_file('./.gitignore', gitignore_contents);
 
   console.info('creating configs');
-  const cp = fs.cp(__dirname + '/assets/init', process.cwd(), { recursive: true });
+  const cp = fs.cp(new URL('/assets/init/', import.meta.url), process.cwd(), {
+    recursive: true,
+  });
 
   await Promise.all([gitignore_write, cp]);
 

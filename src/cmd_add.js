@@ -85,7 +85,7 @@ export async function cmd_add(args) {
   await init;
 
   const cp = fs.cp(
-    __dirname + '/assets/templates/' + template,
+    new URL('/assets/templates/' + template, import.meta.url),
     process.cwd() + '/' + resolved_dir,
     {
       recursive: true,
