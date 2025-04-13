@@ -181,6 +181,7 @@ async function main() {
   }
 }
 
-main().catch(() => {
+main().catch(e => {
+  console.log(e);
   process.exit(255);
 });
