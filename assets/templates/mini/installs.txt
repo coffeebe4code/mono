@@ -1,1 +1,2 @@
 npm i minimist
+npm i -D @types/minimist

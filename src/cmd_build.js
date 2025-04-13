@@ -17,31 +17,32 @@ export async function cmd_build(args) {
     );
   }
 
-  const mono_loaded = load_mono().then(async mono => {
-    const project_loaded = project_exists(mono, project);
-    if (!project_loaded) {
-      critical_error(`!expected a project that exists
+  const mono_loaded = load_mono()
+    .then(async mono => {
+      const project_loaded = project_exists(mono, project);
+      if (!project_loaded) {
+        critical_error(`!expected a project that exists
       `);
-    }
-    let found = false;
-    for (const t of project_loaded.targets) {
-      if (t.kind === 'build') {
-        found = true;
-
-        await run_all_commands(mono, project_loaded, 'build');
-        break;
       }
-    }
-    if (!found) {
-      suggestions(
-        `expected a project and target to contain build`,
-        `
+      let found = false;
+      for (const t of project_loaded.targets) {
+        if (t.kind === 'build') {
+          found = true;
+
+          await run_all_commands(mono, project_loaded, 'build');
+        }
+      }
+      if (!found) {
+        suggestions(
+          `expected a project and target to contain build`,
+          `
       suggestions:
       - this project does not have a build target command
       `,
-      );
-    }
-  });
+        );
+      }
+    })
+    .catch(e => critical_error(e));
 
   await mono_loaded;
 }

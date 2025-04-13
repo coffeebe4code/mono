@@ -236,14 +236,13 @@ export async function recursively_run_target(mono, project, target, processed) {
   /** @type {{name:string, kind: string, uuid: string}[]} */
   let this_targets = Array();
   for (const targ of project.targets) {
-    if (get_order(targ.kind) > get_order(target.kind) || targ.kind === target.kind) {
+    if (get_order(target.kind) > get_order(targ.kind) || targ.kind === target.kind) {
       this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
     }
   }
-  await Promise.all(
-    this_targets.map(async obj => {
-      v.npm_run_spawn(obj.name, obj.kind); // You must implement this function yourself
-    }),
-  );
+  const promises = this_targets.map(obj => {
+    return v.npm_run_spawn(obj.name, obj.kind);
+  });
+  await Promise.all(promises);
   processed.push(...this_targets.map(obj => obj.uuid));
 }

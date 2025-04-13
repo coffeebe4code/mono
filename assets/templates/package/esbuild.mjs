@@ -4,7 +4,7 @@ const es = esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
   platform: 'node',
-  outfile: 'bin/index.mjs',
+  outfile: 'dist/index.mjs',
   target: 'esnext',
   format: 'esm',
   minify: true,

@@ -134,7 +134,6 @@ async function main() {
         console.info(commands.install.help);
         return;
       }
-
       await cmd_install(args);
       break;
     case 'build':
@@ -142,7 +141,6 @@ async function main() {
         console.info(commands.build.help);
         return;
       }
-
       await cmd_build(args);
       break;
     case 'add':

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "{{project_name}}": "./bin/index.cjs"
+    "{{project_name}}": "./bin/index.mjs"
   },
   "type": "module",
   "scripts": {

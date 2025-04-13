@@ -63,7 +63,7 @@ async function append_file(file_dir, text) {
  * @param { boolean } is_scoped - scoped portion, needs --scope
  * @returns { Promise<{stdout:string, stderr:string}> } validates
  */
-async function npm_init_workspace(name, resolved_dir, is_scoped) {
+function npm_init_workspace(name, resolved_dir, is_scoped) {
   const rem = is_scoped ? ` --scope ${name.slice(1).split('/')[0]}` : '';
   console.log(`npm init -y -w ${resolved_dir}${rem}`);
   return exec(`npm init -y -w ${resolved_dir}${rem}`);
@@ -74,7 +74,7 @@ async function npm_init_workspace(name, resolved_dir, is_scoped) {
  * @param { string } target - the workspace
  * @returns { Promise<number | null> } validates
  */
-async function npm_run_spawn(scope, target) {
+function npm_run_spawn(scope, target) {
   return new Promise((res, rej) => {
     const ins = spawn(`npm`, ['run', target, '-w', scope]);
     ins.stdout?.on('data', data => {
