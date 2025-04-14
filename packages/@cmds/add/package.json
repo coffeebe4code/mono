@@ -1,0 +1,24 @@
+{
+  "name": "@cmds/add",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier . --check",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "tsc": "tsc",
+    "build": "node esbuild.mjs"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {},
+  "dependencies": {}
+}

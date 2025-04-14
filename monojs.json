@@ -1,4 +1,289 @@
 {
   "version": 0,
-  "projects": []
+  "projects": [
+    {
+      "name": "mono",
+      "type": "cli",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "41945fcc-c86d-4000-b7d5-8d34a6a4704e",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "6193ac7a-4839-4a3a-9b7c-c43f79a6ee21",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "a07ccce0-4ddc-4522-b4f1-a9dde37811b3",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "930fe7e6-247c-4031-b801-6d1c9d947c04",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "620adecd-c186-4e44-9175-31570ddb6ec9",
+          "dependencies_down": []
+        },
+        {
+          "kind": "install",
+          "uuid": "ae0f05e9-f136-4966-927d-cd0b24a79f46",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@cmds/add",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "1ee22e91-9245-4cad-9065-3423ee47a4c4",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "f38bddb6-2f4c-470a-bf2f-c8d554ad4e58",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "cca24274-5702-4f29-a715-5f757b0098be",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "5aca5ab3-a356-45b6-adaa-f14746bbf7da",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "316b9b63-e47a-458a-88c5-0ffc02c13808",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@cmds/init",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "d712a350-fc5d-47bd-a52c-20e6de4c82a1",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "37113b7f-6d74-4693-838b-987d0c6b7af1",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "6be6be24-25b0-4e87-9691-c205446b4799",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "6c594f1c-bbd3-4a34-9433-bef0d28461a3",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "ef231a8e-2587-40ba-a1fa-6dc315d6a863",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@cmds/graph",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "657b0fda-018a-4855-844c-dfd517ace735",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "6d55c77d-7a6e-4e91-90ee-a0add773f937",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "f9667f34-9399-4532-be75-bd077ed9a387",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "d6c1cd58-1413-4ca1-8392-14404169b559",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "dcf8fe94-4f46-4ce2-a7d2-6b0b30612722",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@cmds/build",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "024e0358-cf60-4d76-8b3c-b3ccd95d914a",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "b047e1de-7d5e-41cf-9d5e-45118e980af7",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "d8d43363-d6b6-4f41-b97d-ba57be90c48a",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "bcece69a-b1fc-4558-8804-9f78ebfd4651",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "c60b2996-3c09-44cb-8117-5c14cfda3671",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@cmds/install",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "6e744e80-2cdd-414e-8ded-55e25d23ff0b",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "6d7a587b-d56c-4e9f-b75b-bf2cb0f3593a",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "25bf2915-6e96-4268-8c65-df1b6d029e02",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "0dc6ed13-8a06-485a-9454-ec2c932b5f42",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "73d91b67-8eba-4338-969e-772ad4d06e1c",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@mono/templates",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "4eb3a66b-7d3f-433b-8267-bcef307f2613",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "7cb7b54e-f5e4-45b8-beba-eedbf518ef2f",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "f893901e-8fc0-4e64-9dfe-0f9f498373a0",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "c9d0fc8c-7e2d-41e2-853d-b6dd16987d5e",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "7cb74a85-8eaa-4342-98c3-ac5628e03cb2",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@mono/validations",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "94f92bf2-3d8d-4b45-895e-672802d81680",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "52c125ee-011f-40e2-a2a0-f33f8f7fb301",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "67127e43-e02f-46ad-873c-ee9b569e7ec3",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "051cc591-d531-4eb9-8d5b-d58a2602a71f",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "8b3a1bcc-a78b-41cc-97eb-d7c1f8d2d809",
+          "dependencies_down": []
+        }
+      ]
+    },
+    {
+      "name": "@core/fs-wrappers",
+      "type": "package",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "a1ad5a75-8a3d-4882-a9b6-f49f68241aad",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "10692452-1643-4b08-a2da-5f7aff01c2b3",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "67918ec0-2b92-4dc8-ab5f-f824ca923713",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "9e2129fe-fc47-4232-b3d6-7c9e5d85614b",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "8e476cc9-c9ac-463e-aba1-eeb25da2da08",
+          "dependencies_down": []
+        }
+      ]
+    }
+  ]
 }

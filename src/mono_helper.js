@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 // @ts-ignore
 import { v4 } from 'uuid';
-import { TemplateKind } from './templates.js';
+import { get_template_kind, TemplateKind } from './templates.js';
 import * as v from './validations.js';
 
 /**
@@ -141,10 +141,11 @@ export function create_target(kind) {
 
 /**
  * @param {string} name - this is the name for the project
- * @param {string} type - this is the template type for the project
+ * @param {string} template - this is the template type for the project
  * @returns {ProjectStruct} returns the project
  */
-export function create_project(name, type) {
+export function create_project(name, template) {
+  let type = get_template_kind(template);
   let kinds = get_target_kinds(type);
   /** @type {TargetStruct[]} */
   const targets = kinds.map(kind => {

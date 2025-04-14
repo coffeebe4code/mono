@@ -42,8 +42,8 @@ export async function cmd_add(args) {
       }
     }
   }
-  const clean = v.git_clean();
-  await clean;
+  //const clean = v.git_clean();
+  //await clean;
 
   const scoped_name = name.includes('@') && name.includes('/');
   const template_loc = t.get_template_kind_path(template);
@@ -85,7 +85,7 @@ export async function cmd_add(args) {
   await init;
 
   const cp = fs.cp(
-    new URL('/assets/templates/' + template, import.meta.url),
+    import.meta.dirname + '/assets/templates/' + template,
     process.cwd() + '/' + resolved_dir,
     {
       recursive: true,

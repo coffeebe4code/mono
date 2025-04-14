@@ -12,11 +12,18 @@ const TemplateKind = {
   PACKAGE: 'package',
 };
 
-const SupportedTemplates = {
+const SupportedPathTemplates = {
   koa: TemplateFolderKind.SERVICE,
   uws: TemplateFolderKind.SERVICE,
   mini: TemplateFolderKind.CLI,
   package: TemplateFolderKind.PACKAGE,
+};
+
+const SupportedTemplates = {
+  koa: TemplateKind.SERVICE,
+  uws: TemplateKind.SERVICE,
+  mini: TemplateKind.CLI,
+  package: TemplateKind.PACKAGE,
 };
 
 /**
@@ -26,6 +33,21 @@ const SupportedTemplates = {
 function get_template_kind_path(name) {
   //* @type {string | undefined} */
   let result = undefined;
+  Object.entries(SupportedPathTemplates).forEach(([key, val]) => {
+    if (key === name) {
+      result = val;
+    }
+  });
+  return result;
+}
+
+/**
+ * @param {string} name - name of template
+ * @returns {string} - returns the path location or undefined if not found
+ */
+function get_template_kind(name) {
+  //* @type {string} */
+  let result = '';
   Object.entries(SupportedTemplates).forEach(([key, val]) => {
     if (key === name) {
       result = val;
@@ -47,6 +69,7 @@ export {
   TemplateKind,
   TemplateFolderKind,
   SupportedTemplates,
+  get_template_kind,
   get_template_kind_path,
   get_templates,
 };

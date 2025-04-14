@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// @ts-ignore
 import mini from 'minimist';
 import { cmd_init } from './cmd_init.js';
 import { cmd_add } from './cmd_add.js';

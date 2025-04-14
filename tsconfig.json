@@ -9,7 +9,44 @@
     "allowJs": true,
     "noEmit": true,
     "alwaysStrict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "paths": {
+      "@mono/cli": [
+        "./clis/@mono/cli/*"
+      ],
+      "mono": [
+        "./clis/mono/*"
+      ],
+      "@cmds/add": [
+        "./packages/@cmds/add/*"
+      ],
+      "@cmds/init": [
+        "./packages/@cmds/init/*"
+      ],
+      "@cmds/graph": [
+        "./packages/@cmds/graph/*"
+      ],
+      "@cmds/build": [
+        "./packages/@cmds/build/*"
+      ],
+      "@cmds/install": [
+        "./packages/@cmds/install/*"
+      ],
+      "@core/mono": [
+        "./packages/@core/mono/*"
+      ],
+      "@mono/templates": [
+        "./packages/@mono/templates/*"
+      ],
+      "@mono/validations": [
+        "./packages/@mono/validations/*"
+      ],
+      "@core/fs-wrappers": [
+        "./packages/@core/fs-wrappers/*"
+      ]
+    }
   },
-  "include": ["src/**/*.js"]
+  "include": [
+    "src/**/*.js"
+  ]
 }

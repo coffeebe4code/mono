@@ -64,7 +64,7 @@ export async function cmd_init() {
   const gitignore_write = v.append_file('./.gitignore', gitignore_contents);
 
   console.info('creating configs');
-  const cp = fs.cp(new URL('/assets/init/', import.meta.url), process.cwd(), {
+  const cp = fs.cp(import.meta.dirname + '/assets/init/', process.cwd(), {
     recursive: true,
   });
 
