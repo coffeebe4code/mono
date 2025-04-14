@@ -137,4 +137,6 @@ dist
 # monojs
 .monojs
 .mono-cache
-
+bin
+node_modules
+dist
