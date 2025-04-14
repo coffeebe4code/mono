@@ -49,6 +49,7 @@
     "packages/@core/mono",
     "packages/@mono/templates",
     "packages/@mono/validations",
-    "packages/@core/fs-wrappers"
+    "packages/@core/fs-wrappers",
+    "clis/@mono/mono"
   ]
 }

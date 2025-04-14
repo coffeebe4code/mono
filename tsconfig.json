@@ -9,6 +9,11 @@
     "allowJs": true,
     "noEmit": true,
     "alwaysStrict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "paths": {
+      "@mono/mono": [
+        "./clis/@mono/mono/*"
+      ]
+    }
   }
 }

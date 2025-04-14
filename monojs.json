@@ -1,4 +1,41 @@
 {
   "version": 0,
-  "projects": []
+  "projects": [
+    {
+      "name": "@mono/mono",
+      "type": "cli",
+      "targets": [
+        {
+          "kind": "prettier",
+          "uuid": "4df990aa-bbd4-4c95-9dcf-1fa7f8982f53",
+          "dependencies_down": []
+        },
+        {
+          "kind": "tsc",
+          "uuid": "851ea81a-b621-4888-a743-51d412da66a0",
+          "dependencies_down": []
+        },
+        {
+          "kind": "lint",
+          "uuid": "9cfb2f9c-339a-4ad9-b02b-8a556ba9ab90",
+          "dependencies_down": []
+        },
+        {
+          "kind": "build",
+          "uuid": "e9f1ed8d-b1cc-4302-a41c-e374998f3ff4",
+          "dependencies_down": []
+        },
+        {
+          "kind": "test",
+          "uuid": "0f452d1e-a000-4c5b-991c-5634a6e0e078",
+          "dependencies_down": []
+        },
+        {
+          "kind": "install",
+          "uuid": "2f402a3b-0a60-4e41-88b1-542605ae5cd5",
+          "dependencies_down": []
+        }
+      ]
+    }
+  ]
 }

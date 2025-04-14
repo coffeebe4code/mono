@@ -17,7 +17,13 @@ export default [
   },
   jsdoc.configs['flat/recommended'],
   {
-    files: ['services/**/*.js', 'packages/**/*.js', 'clis/**/*.js', 'apps/**/*.js'],
+    files: [
+      'services/**/*.js',
+      'packages/**/*.js',
+      'clis/**/*.js',
+      'apps/**/*.js',
+      'src/**/*.js',
+    ],
     languageOptions: { globals: { ...globals.node } },
   },
   {
