@@ -31,18 +31,17 @@ export async function cmd_init() {
     let local_error = false;
     files.map(x => {
       if (
-        x.includes('eslint.config') ||
-        x.includes('prettier.config') ||
+        x.includes('.editorconfig') ||
         x.includes('jest.config') ||
         x.includes('monojs.json') ||
-        x.includes('tsconfig.json')
+        x.includes('tsconfig')
       ) {
         local_error = true;
       }
     });
     if (local_error) {
       v.suggestions(
-        `Error: found either "eslint.config", "prettier.config", "jest.config", "monojs.json", or "tsconfig" file`,
+        `Error: found either ".editorconfig", "jest.config", "monojs.json", or "tsconfig" file`,
         read_suggestions,
       );
     }
