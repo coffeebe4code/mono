@@ -1,10 +1,10 @@
 {
-  "name": "@mono/mono",
+  "name": "@mono/monojs",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "bin": {
-    "@mono/mono": "./bin/index.mjs"
+    "@mono/monojs": "./bin/index.mjs"
   },
   "type": "module",
   "scripts": {

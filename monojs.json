@@ -2,7 +2,7 @@
   "version": 0,
   "projects": [
     {
-      "name": "@mono/mono",
+      "name": "@mono/monojs",
       "type": "cli",
       "targets": [
         {

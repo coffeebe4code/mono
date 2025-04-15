@@ -4,19 +4,8 @@
   "description": "This is an opinionated, dirty, bikeshed based monorepo tool and framework for building and deploying multiple projects with very few options and customizability",
   "main": "index.js",
   "type": "module",
-  "bin": {
-    "monojs": "./bin/index.mjs"
-  },
   "scripts": {
-    "lint": "eslint .",
-    "prettier": "prettier . --check",
-    "jest": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "tsc": "tsc",
-    "build": "node esbuild.mjs",
-    "ins": "npm i . -g",
-    "compile": "npm-run-all --parallel lint prettier tsc build jest",
-    "local": "npm-run-all -s compile ins",
-    "test": "jest"
+    "ins": "npm i . -g"
   },
   "author": "coffeeb4code",
   "license": "MIT",
@@ -40,8 +29,6 @@
     "uuid": "^9.0.1"
   },
   "workspaces": [
-    "clis/@mono/cli",
-    "clis/mono",
     "packages/@cmds/add",
     "packages/@cmds/init",
     "packages/@cmds/graph",
@@ -51,7 +38,7 @@
     "packages/@mono/templates",
     "packages/@mono/validations",
     "packages/@core/fs-wrappers",
-    "clis/@mono/mono",
+    "clis/@mono/monojs",
     "packages/@mono/cmds",
     "packages/@mono/logic"
   ]
