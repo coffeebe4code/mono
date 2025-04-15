@@ -1,12 +1,15 @@
 {
-  "name": "{{project_name}}",
+  "name": "@mono/templates",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
-  "bin": {
-    "{{project_name}}": "./bin/index.mjs"
-  },
+  "main": "dist/index.js",
   "type": "module",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
+  },
   "scripts": {
     "lint": "eslint .",
     "prettier": "prettier 'src/**/*.js' --check",

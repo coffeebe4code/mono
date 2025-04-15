@@ -13,6 +13,18 @@
     "paths": {
       "@mono/mono": [
         "./clis/@mono/mono/*"
+      ],
+      "@mono/cmds": [
+        "./packages/@mono/cmds/*"
+      ],
+      "@mono/templates": [
+        "./packages/@mono/templates/*"
+      ],
+      "@mono/validations": [
+        "./packages/@mono/validations/*"
+      ],
+      "@mono/logic": [
+        "./packages/@mono/logic/*"
       ]
     }
   }

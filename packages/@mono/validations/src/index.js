@@ -35,18 +35,6 @@ const mono_not_suggestions = `
     - ensure this command was ran at root of repository
 `;
 
-export const validations = {
-  git_clean: async () => {
-    return exec('git status -s')
-      .then(async (/** @type {{stdout:string}} */ { stdout }) => {
-        if (stdout.length > 1) {
-          critical_error('clean working directory error');
-        }
-      })
-      .catch(e => suggestions(e, git_suggestions));
-  },
-};
-
 /**
  * @returns { Promise<void> } validates
  */

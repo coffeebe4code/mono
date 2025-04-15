@@ -12,6 +12,7 @@ export default [
       'packages/**/*.spec.js',
       'clis/**/*.spec.js',
       'apps/**/*.spec.js',
+      'src/**/*.spec.js',
     ],
     ...jest.configs['flat/recommended'],
   },

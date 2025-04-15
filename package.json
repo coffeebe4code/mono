@@ -50,6 +50,8 @@
     "packages/@mono/templates",
     "packages/@mono/validations",
     "packages/@core/fs-wrappers",
-    "clis/@mono/mono"
+    "clis/@mono/mono",
+    "packages/@mono/cmds",
+    "packages/@mono/logic"
   ]
 }
