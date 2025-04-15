@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import mini from 'minimist';
-import { cmd_init } from './cmd_init.js';
-import { cmd_add } from './cmd_add.js';
-import { cmd_graph } from './cmd_graph.js';
-import { cmd_build } from './cmd_build.js';
-import * as templates from './templates.js';
-import { cmd_install } from './cmd_install.js';
+import { cmd_init } from '@mono/cmds';
+import { cmd_add } from '@mono/cmds';
+import { cmd_graph } from '@mono/cmds';
+import { cmd_build } from '@mono/cmds';
+import * as templates from '@mono/templates';
+import { cmd_install } from '@mono/cmds';
 
 const commands = {
   build: {

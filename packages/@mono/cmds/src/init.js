@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises';
-import * as v from './validations.js';
+import * as v from '@mono/validations';
 
 const read_suggestions = `
     suggestions:

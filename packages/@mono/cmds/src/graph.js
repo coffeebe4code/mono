@@ -1,6 +1,6 @@
-import { add_dependency, load_mono, project_exists, write_mono } from './mono_helper.js';
+import { add_dependency, load_mono, project_exists, write_mono } from '@mono/logic';
 
-import { critical_error, suggestions } from './validations.js';
+import { critical_error, suggestions } from '@mono/validations';
 
 const project_depends_sug = `
     suggestions:

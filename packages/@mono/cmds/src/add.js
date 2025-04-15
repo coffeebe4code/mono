@@ -1,8 +1,8 @@
 import * as fs from 'node:fs/promises';
-import * as v from './validations.js';
-import * as t from './templates.js';
-import { project_exists, create_project, load_mono, write_mono } from './mono_helper.js';
-/** @typedef {import('./mono_helper.js').MonoStruct} MonoStruct */
+import * as v from '@mono/validations';
+import * as t from '@mono/templates';
+import { project_exists, create_project, load_mono, write_mono } from '@mono/logic';
+/** @typedef {import('@mono/logic').MonoStruct} MonoStruct */
 
 /**
  * @param {any} args - the args from command

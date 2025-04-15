@@ -1,4 +1,4 @@
-import * as v from './validations.js';
+import * as v from '@mono/validations';
 
 /**
  * @param {any} args - the args from command

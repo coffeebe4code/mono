@@ -8,27 +8,52 @@
         {
           "kind": "prettier",
           "uuid": "4df990aa-bbd4-4c95-9dcf-1fa7f8982f53",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/cmds",
+              "uuid": "7e89fc69-13bb-4116-842f-f9da3f1a7c9b"
+            }
+          ]
         },
         {
           "kind": "tsc",
           "uuid": "851ea81a-b621-4888-a743-51d412da66a0",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/cmds",
+              "uuid": "940646c4-4a69-4cfb-96ff-82eb4a48ae65"
+            }
+          ]
         },
         {
           "kind": "lint",
           "uuid": "9cfb2f9c-339a-4ad9-b02b-8a556ba9ab90",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/cmds",
+              "uuid": "47e9e5b2-5cfe-4fe8-ab5f-9a8d54cb30aa"
+            }
+          ]
         },
         {
           "kind": "build",
           "uuid": "e9f1ed8d-b1cc-4302-a41c-e374998f3ff4",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/cmds",
+              "uuid": "48bc13ba-2b31-4859-baf1-bfdb7fbb5378"
+            }
+          ]
         },
         {
           "kind": "test",
           "uuid": "0f452d1e-a000-4c5b-991c-5634a6e0e078",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/cmds",
+              "uuid": "74f606d7-6ddd-40fc-a914-a4a056863e0c"
+            }
+          ]
         },
         {
           "kind": "install",
@@ -44,27 +69,92 @@
         {
           "kind": "prettier",
           "uuid": "7e89fc69-13bb-4116-842f-f9da3f1a7c9b",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/logic",
+              "uuid": "3fe3a6cd-3a01-425e-9011-5afe96e7f616"
+            },
+            {
+              "name": "@mono/validations",
+              "uuid": "6fe62a5e-652e-464e-8bea-af104db0554c"
+            },
+            {
+              "name": "@mono/templates",
+              "uuid": "8ee66685-5a63-4f3d-9d91-70f29b5841d1"
+            }
+          ]
         },
         {
           "kind": "tsc",
           "uuid": "940646c4-4a69-4cfb-96ff-82eb4a48ae65",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/logic",
+              "uuid": "21895067-b687-4e3f-9606-1e6bab87281f"
+            },
+            {
+              "name": "@mono/validations",
+              "uuid": "74f1f8b2-3ddb-4536-a797-561af92b5141"
+            },
+            {
+              "name": "@mono/templates",
+              "uuid": "dbee4173-f7b4-4921-8f53-3940b1ab8236"
+            }
+          ]
         },
         {
           "kind": "lint",
           "uuid": "47e9e5b2-5cfe-4fe8-ab5f-9a8d54cb30aa",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/logic",
+              "uuid": "8279c324-b2d2-4dd3-8c37-9a74684f778b"
+            },
+            {
+              "name": "@mono/validations",
+              "uuid": "e4a9e1fd-b682-40d5-8baa-4a86c483b81b"
+            },
+            {
+              "name": "@mono/templates",
+              "uuid": "13e97bdb-e4d1-4a7b-80de-21454006a4fe"
+            }
+          ]
         },
         {
           "kind": "build",
           "uuid": "48bc13ba-2b31-4859-baf1-bfdb7fbb5378",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/logic",
+              "uuid": "51a6669d-fdf7-43bb-bd3e-932b74c9d714"
+            },
+            {
+              "name": "@mono/validations",
+              "uuid": "0570bd47-7773-4b88-9779-d9093a7e4978"
+            },
+            {
+              "name": "@mono/templates",
+              "uuid": "0e661b35-ecce-4291-9c04-5063cd51ad12"
+            }
+          ]
         },
         {
           "kind": "test",
           "uuid": "74f606d7-6ddd-40fc-a914-a4a056863e0c",
-          "dependencies_down": []
+          "dependencies_down": [
+            {
+              "name": "@mono/logic",
+              "uuid": "8bae6d17-dc9f-410b-918b-1e563323554b"
+            },
+            {
+              "name": "@mono/validations",
+              "uuid": "ff183709-190d-4291-a0d7-1dd613b8d12f"
+            },
+            {
+              "name": "@mono/templates",
+              "uuid": "4590d707-15ba-46b9-beb5-1d7f7647ff81"
+            }
+          ]
         }
       ]
     },

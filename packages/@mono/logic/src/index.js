@@ -1,8 +1,7 @@
 import * as fs from 'node:fs/promises';
-// @ts-ignore
 import { v4 } from 'uuid';
 import { get_template_kind, TemplateKind } from '@mono/templates';
-import { validations } from '@mono/validations';
+import * as v from '@mono/validations';
 
 /**
  * Represents the Dependencies structure

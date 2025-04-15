@@ -1,5 +1,5 @@
-import { run_all_commands, load_mono, project_exists } from './mono_helper.js';
-import { critical_error, suggestions } from './validations.js';
+import { run_all_commands, load_mono, project_exists } from '@mono/logic';
+import { critical_error, suggestions } from '@mono/validations';
 /**
  * @param {any} args - the args from command
  * @returns {Promise<void>}
