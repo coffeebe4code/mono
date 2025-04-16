@@ -19,7 +19,7 @@ dist
 /**
  *
  */
-export async function cmd_init() {
+export async function init() {
   const mono = v.mono_not_exists();
 
   await mono;

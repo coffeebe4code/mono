@@ -17,5 +17,6 @@
       "@mono/validations": ["./packages/@mono/validations/*"],
       "@mono/logic": ["./packages/@mono/logic/*"]
     }
-  }
+  },
+  "include": ["packages/**", "clis/**", "services/**"]
 }

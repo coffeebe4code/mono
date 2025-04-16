@@ -129,28 +129,28 @@ async function main() {
         console.info(commands.install.help);
         return;
       }
-      await cmd.cmd_install(args);
+      await cmd.install(args);
       break;
     case 'build':
       if (args.help) {
         console.info(commands.build.help);
         return;
       }
-      await cmd.cmd_build(args);
+      await cmd.build(args);
       break;
     case 'add':
       if (args.help) {
         console.info(commands.add.help);
         return;
       }
-      await cmd.cmd_add(args);
+      await cmd.add(args);
       break;
     case 'init':
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
-      await cmd.cmd_init();
+      await cmd.init();
       break;
     case 'g':
     case 'graph':
@@ -158,7 +158,7 @@ async function main() {
         console.info(commands.graph.help);
         process.exit(0);
       }
-      await cmd.cmd_graph(args);
+      await cmd.graph(args);
       break;
     case 'help':
       console.info(commands.help.help);
@@ -172,7 +172,7 @@ async function main() {
     default:
       console.info('!invalid command provided');
       console.info(commands.help.help);
-      process.exit(1);
+      process.exit(255);
   }
 }
 

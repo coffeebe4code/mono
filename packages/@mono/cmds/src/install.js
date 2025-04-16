@@ -4,7 +4,7 @@ import * as v from '@mono/validations';
  * @param {any} args - the args from command
  * @returns {Promise<void>}
  */
-export async function cmd_install(args) {
+export async function install(args) {
   /** @type {string | undefined} */
   const name = args._[1];
   /** @type {string | undefined} */

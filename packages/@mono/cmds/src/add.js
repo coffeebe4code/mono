@@ -8,7 +8,7 @@ import { project_exists, create_project, load_mono, write_mono } from '@mono/log
  * @param {any} args - the args from command
  * @returns {Promise<void>}
  */
-export async function cmd_add(args) {
+export async function add(args) {
   /** @type {string | undefined} */
   const name = args._[1];
   /** @type {string | undefined} */

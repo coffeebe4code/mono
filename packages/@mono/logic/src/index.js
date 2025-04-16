@@ -1,6 +1,10 @@
 import * as fs from 'node:fs/promises';
 import { v4 } from 'uuid';
-import { get_template_kind, TemplateKind } from '@mono/templates';
+import {
+  get_template_folder_kind,
+  get_template_kind,
+  TemplateKind,
+} from '@mono/templates';
 import * as v from '@mono/validations';
 
 /**
@@ -231,7 +235,7 @@ export async function recursively_run_target(mono, project, target, processed, v
   if (processed.includes(target.uuid)) {
     return 0;
   }
-  //let proc_count = 0;
+  let proc_count = 0;
 
   for (const dep of target.dependencies_down) {
     const dep_proj = mono.projects.find(p => p.name === dep.name);
@@ -244,26 +248,62 @@ export async function recursively_run_target(mono, project, target, processed, v
       throw `Error: expected target to exist, dependency: ${dep.uuid} dependency: ${dep.name} `;
     }
 
-    await recursively_run_target(mono, dep_proj, dep_target, processed, vals);
+    proc_count += await recursively_run_target(
+      mono,
+      dep_proj,
+      dep_target,
+      processed,
+      vals,
+    );
   }
-  /** @type {{name:string, kind: string, uuid: string}[]} */
-  let this_targets = [];
-  for (const targ of project.targets) {
-    if (get_order(target.kind) > get_order(targ.kind) || targ.kind === target.kind) {
-      this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
+  const target_val = vals.find(x => x.uuid == target.uuid);
+  let newer = false;
+  if (target_val) {
+    const base_folder = `${process.cwd()}/${get_template_folder_kind(project.type) ?? ''}/${project.name}`;
+    const src = await fs
+      .readdir(base_folder + `/src`, { recursive: true })
+      .then(async files => {
+        for (const file of files) {
+          const stat = await fs.stat(`${base_folder}/src/${file}`);
+          if (stat.mtimeMs >= target_val.date) {
+            return true;
+          }
+        }
+      });
+    const assets = await fs
+      .readdir(base_folder + `/assets`, { withFileTypes: true, recursive: true })
+      .then(async files => {
+        for (const file of files) {
+          const stat = await fs.stat(`${base_folder}/assets/${file}`);
+          if (stat.mtimeMs >= target_val.date) {
+            return true;
+          }
+        }
+      })
+      .catch(() => false);
+    newer = (assets ?? false) || (src ?? false);
+  }
+  if (newer || proc_count > 0) {
+    /** @type {{name:string, kind: string, uuid: string}[]} */
+    let this_targets = [];
+    for (const targ of project.targets) {
+      if (get_order(target.kind) > get_order(targ.kind) || targ.kind === target.kind) {
+        this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
+      }
     }
+    const promises = this_targets.map(obj => {
+      return v.npm_run_spawn(obj.name, obj.kind);
+    });
+    await Promise.all(promises);
+    await Promise.all(
+      this_targets.map(obj =>
+        fs
+          .open(`${process.cwd()}/.mono-cache/targets/${obj.uuid}`, 'w')
+          .then(handle => handle.close()),
+      ),
+    );
+    processed.push(...this_targets.map(obj => obj.uuid));
+    return this_targets.length;
   }
-  const promises = this_targets.map(obj => {
-    return v.npm_run_spawn(obj.name, obj.kind);
-  });
-  await Promise.all(promises);
-  await Promise.all(
-    this_targets.map(obj =>
-      fs
-        .open(`${process.cwd()}/.mono-cache/targets/${obj.uuid}`, 'w')
-        .then(handle => handle.close()),
-    ),
-  );
-  processed.push(...this_targets.map(obj => obj.uuid));
-  return this_targets.length;
+  return 0;
 }

@@ -10,7 +10,7 @@ const project_depends_sug = `
  * @param {any} args - the args from command
  * @returns {Promise<void>}
  */
-export async function cmd_graph(args) {
+export async function graph(args) {
   /** @type {string | undefined} */
   const name = args._[1];
   /** @type {string | undefined} */

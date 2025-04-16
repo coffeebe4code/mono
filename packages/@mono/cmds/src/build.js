@@ -4,7 +4,7 @@ import { critical_error, suggestions } from '@mono/validations';
  * @param {any} args - the args from command
  * @returns {Promise<void>}
  */
-export async function cmd_build(args) {
+export async function build(args) {
   /** @type {string | undefined} */
   const project = args._[1];
 
