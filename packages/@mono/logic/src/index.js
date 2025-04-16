@@ -201,6 +201,12 @@ export function add_dependency(project, dproject) {
 export async function run_all_commands(mono, project, kind) {
   /** @type {string[]} */
   let processed = [];
+  const target_path = `${process.cwd()}/.mono-cache/targets`;
+  await fs.mkdir(target_path);
+  let target_times = fs.readdir(target_path, { recursive: true }).then(files => {
+    console.log(...files);
+  });
+  await target_times;
   const target = project.targets.find(t => t.kind === kind);
   if (!target) {
     throw `Error: expected target to exist for project ${project.name}: target ${kind}`;
