@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 import mini from 'minimist';
-import { cmd_init } from '@mono/cmds';
-import { cmd_add } from '@mono/cmds';
-import { cmd_graph } from '@mono/cmds';
-import { cmd_build } from '@mono/cmds';
+import * as cmd from '@mono/cmds';
 import * as templates from '@mono/templates';
-import { cmd_install } from '@mono/cmds';
 
 const commands = {
   build: {
@@ -133,28 +129,28 @@ async function main() {
         console.info(commands.install.help);
         return;
       }
-      await cmd_install(args);
+      await cmd.cmd_install(args);
       break;
     case 'build':
       if (args.help) {
         console.info(commands.build.help);
         return;
       }
-      await cmd_build(args);
+      await cmd.cmd_build(args);
       break;
     case 'add':
       if (args.help) {
         console.info(commands.add.help);
         return;
       }
-      await cmd_add(args);
+      await cmd.cmd_add(args);
       break;
     case 'init':
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
-      await cmd_init();
+      await cmd.cmd_init();
       break;
     case 'g':
     case 'graph':
@@ -162,7 +158,7 @@ async function main() {
         console.info(commands.graph.help);
         process.exit(0);
       }
-      await cmd_graph(args);
+      await cmd.cmd_graph(args);
       break;
     case 'help':
       console.info(commands.help.help);

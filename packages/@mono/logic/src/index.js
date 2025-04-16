@@ -202,16 +202,21 @@ export async function run_all_commands(mono, project, kind) {
   /** @type {string[]} */
   let processed = [];
   const target_path = `${process.cwd()}/.mono-cache/targets`;
-  await fs.mkdir(target_path);
-  let target_times = fs.readdir(target_path, { recursive: true }).then(files => {
-    console.log(...files);
+  await fs.mkdir(target_path, { recursive: true });
+  /** @type {{uuid: string, date: number}[]} */
+  let vals = [];
+  let target_times = fs.readdir(target_path, { recursive: true }).then(async files => {
+    for (const file of files) {
+      const stat = await fs.stat(`${process.cwd()}/.mono-cache/targets/${file}`);
+      vals.push({ uuid: file, date: stat.mtimeMs });
+    }
   });
   await target_times;
   const target = project.targets.find(t => t.kind === kind);
   if (!target) {
     throw `Error: expected target to exist for project ${project.name}: target ${kind}`;
   }
-  await recursively_run_target(mono, project, target, processed);
+  await recursively_run_target(mono, project, target, processed, vals);
 }
 
 /**
@@ -219,12 +224,14 @@ export async function run_all_commands(mono, project, kind) {
  * @param {ProjectStruct} project - the current project
  * @param {TargetStruct} target - the current target to run
  * @param {string[]} processed - list of processed UUIDs
- * @returns {Promise<void>}
+ * @param {{uuid: string, date: number}[]} vals - list of stats of targets
+ * @returns {Promise<number>} - returns the number of targets ran
  */
-export async function recursively_run_target(mono, project, target, processed) {
+export async function recursively_run_target(mono, project, target, processed, vals) {
   if (processed.includes(target.uuid)) {
-    return;
+    return 0;
   }
+  //let proc_count = 0;
 
   for (const dep of target.dependencies_down) {
     const dep_proj = mono.projects.find(p => p.name === dep.name);
@@ -237,10 +244,10 @@ export async function recursively_run_target(mono, project, target, processed) {
       throw `Error: expected target to exist, dependency: ${dep.uuid} dependency: ${dep.name} `;
     }
 
-    await recursively_run_target(mono, dep_proj, dep_target, processed);
+    await recursively_run_target(mono, dep_proj, dep_target, processed, vals);
   }
   /** @type {{name:string, kind: string, uuid: string}[]} */
-  let this_targets = Array();
+  let this_targets = [];
   for (const targ of project.targets) {
     if (get_order(target.kind) > get_order(targ.kind) || targ.kind === target.kind) {
       this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
@@ -250,5 +257,13 @@ export async function recursively_run_target(mono, project, target, processed) {
     return v.npm_run_spawn(obj.name, obj.kind);
   });
   await Promise.all(promises);
+  await Promise.all(
+    this_targets.map(obj =>
+      fs
+        .open(`${process.cwd()}/.mono-cache/targets/${obj.uuid}`, 'w')
+        .then(handle => handle.close()),
+    ),
+  );
   processed.push(...this_targets.map(obj => obj.uuid));
+  return this_targets.length;
 }
