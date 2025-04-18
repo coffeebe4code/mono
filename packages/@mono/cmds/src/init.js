@@ -1,5 +1,5 @@
-import * as fs from 'node:fs/promises';
-import * as v from '@mono/validations';
+import * as fs from "node:fs/promises";
+import * as v from "@mono/validations";
 
 const read_suggestions = `
     suggestions:
@@ -27,14 +27,14 @@ export async function init() {
   const gitignore = v.gitignore_exists();
   const gitdir = v.git_dir_exists();
   const package_file = v.package_exists();
-  const readdir = fs.readdir('.').then(async files => {
+  const readdir = fs.readdir(".").then(async (files) => {
     let local_error = false;
-    files.map(x => {
+    files.map((x) => {
       if (
-        x.includes('.editorconfig') ||
-        x.includes('jest.config') ||
-        x.includes('monojs.json') ||
-        x.includes('tsconfig')
+        x.includes(".editorconfig") ||
+        x.includes("jest.config") ||
+        x.includes("monojs.json") ||
+        x.includes("tsconfig")
       ) {
         local_error = true;
       }
@@ -53,21 +53,23 @@ export async function init() {
 
   await git;
 
-  console.info('installing necessary npm dev dependencies. this could take a minute');
+  console.info(
+    "installing necessary npm dev dependencies. this could take a minute",
+  );
   const npm = v.npm_install(
-    'npm install -D esbuild eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest',
+    "npm install -D esbuild eslint eslint-plugin-jsdoc jsdoc prettier typescript @types/jest @types/node eslint-plugin-jest",
   );
   await npm;
 
-  console.info('modifying .gitignore');
-  const gitignore_write = v.append_file('./.gitignore', gitignore_contents);
+  console.info("modifying .gitignore");
+  const gitignore_write = v.append_file("./.gitignore", gitignore_contents);
 
-  console.info('creating configs');
-  const cp = fs.cp(import.meta.dirname + '/assets/init/', process.cwd(), {
+  console.info("creating configs");
+  const cp = fs.cp(import.meta.dirname + "/assets/init/", process.cwd(), {
     recursive: true,
   });
 
   await Promise.all([gitignore_write, cp]);
 
-  console.info('completed initialization');
+  console.info("completed initialization");
 }

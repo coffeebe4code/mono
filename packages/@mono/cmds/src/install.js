@@ -1,4 +1,4 @@
-import * as v from '@mono/validations';
+import * as v from "@mono/validations";
 
 /**
  * @param {any} args - the args from command
@@ -8,7 +8,7 @@ export async function install(args) {
   /** @type {string | undefined} */
   const name = args._[1];
   /** @type {string | undefined} */
-  const dev = args['save-dev'] ?? args.D;
+  const dev = args["save-dev"] ?? args.D;
   const non_dev = args._.slice(2);
 
   if (!name) {
@@ -40,16 +40,18 @@ export async function install(args) {
   await Promise.all([gitdir, package_file, monojs_file, git]);
 
   let install;
-  if (name == '.') {
+  if (name == ".") {
     if (dev) {
-      install = v.npm_install(`npm install -D ${dev + non_dev.join(' ')}`);
+      install = v.npm_install(`npm install -D ${dev + non_dev.join(" ")}`);
     } else {
-      install = v.npm_install(`npm install ${non_dev.join(' ')}`);
+      install = v.npm_install(`npm install ${non_dev.join(" ")}`);
     }
   } else if (dev) {
-    install = v.npm_install(`npm install -D ${dev + non_dev.join(' ')} -w ${name}`);
+    install = v.npm_install(
+      `npm install -D ${dev + non_dev.join(" ")} -w ${name}`,
+    );
   } else {
-    install = v.npm_install(`npm install ${non_dev.join(' ')} -w ${name}`);
+    install = v.npm_install(`npm install ${non_dev.join(" ")} -w ${name}`);
   }
   return await install;
 }

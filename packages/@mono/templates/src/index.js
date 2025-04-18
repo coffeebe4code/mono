@@ -1,15 +1,15 @@
 const TemplateFolderKind = {
-  SERVICE: 'services',
-  CLI: 'clis',
-  APP: 'apps',
-  PACKAGE: 'packages',
+  SERVICE: "services",
+  CLI: "clis",
+  APP: "apps",
+  PACKAGE: "packages",
 };
 
 const TemplateKind = {
-  SERVICE: 'service',
-  CLI: 'cli',
-  APP: 'app',
-  PACKAGE: 'package',
+  SERVICE: "service",
+  CLI: "cli",
+  APP: "app",
+  PACKAGE: "package",
 };
 
 /**
@@ -62,7 +62,7 @@ function get_template_kind_path(name) {
  */
 function get_template_kind(name) {
   //* @type {string} */
-  let result = '';
+  let result = "";
   Object.entries(SupportedTemplates).forEach(([key, val]) => {
     if (key === name) {
       result = val;
@@ -75,7 +75,7 @@ function get_template_kind(name) {
  * @returns {string[]} - returns the supported templates
  */
 function get_templates() {
-  return Object.keys(SupportedTemplates).map(key => {
+  return Object.keys(SupportedTemplates).map((key) => {
     return key;
   });
 }

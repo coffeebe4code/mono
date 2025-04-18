@@ -1,6 +1,11 @@
-import { add_dependency, load_mono, project_exists, write_mono } from '@mono/logic';
+import {
+  add_dependency,
+  load_mono,
+  project_exists,
+  write_mono,
+} from "@mono/logic";
 
-import { critical_error, suggestions } from '@mono/validations';
+import { critical_error, suggestions } from "@mono/validations";
 
 const project_depends_sug = `
     suggestions:
@@ -14,7 +19,7 @@ export async function graph(args) {
   /** @type {string | undefined} */
   const name = args._[1];
   /** @type {string | undefined} */
-  const depends = args['depends-on'] ?? args.d;
+  const depends = args["depends-on"] ?? args.d;
 
   if (!name || !depends) {
     suggestions(
@@ -24,7 +29,7 @@ export async function graph(args) {
   }
 
   let mono = load_mono()
-    .then(async m => {
+    .then(async (m) => {
       const top = project_exists(m, name);
       const bot = project_exists(m, depends);
       if (!top || !bot) {
@@ -40,7 +45,7 @@ export async function graph(args) {
       add_dependency(top, bot);
       return await write_mono(m);
     })
-    .catch(e => critical_error(e));
+    .catch((e) => critical_error(e));
 
   await mono;
 }

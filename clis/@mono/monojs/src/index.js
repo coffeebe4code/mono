@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import mini from 'minimist';
-import * as cmd from '@mono/cmds';
-import * as templates from '@mono/templates';
+import mini from "minimist";
+import * as cmd from "@mono/cmds";
+import * as templates from "@mono/templates";
 
 const commands = {
   build: {
@@ -73,8 +73,8 @@ const commands = {
 
     supported:
 ${templates.get_templates().reduce((acc, val) => {
-  return acc + '    ' + val + '\n';
-}, '')}
+  return acc + "    " + val + "\n";
+}, "")}
     `,
   },
   graph: {
@@ -123,60 +123,60 @@ async function main() {
     process.exit(0);
   }
   switch (command) {
-    case 'i':
-    case 'install':
+    case "i":
+    case "install":
       if (args.help) {
         console.info(commands.install.help);
         return;
       }
       await cmd.install(args);
       break;
-    case 'build':
+    case "build":
       if (args.help) {
         console.info(commands.build.help);
         return;
       }
       await cmd.build(args);
       break;
-    case 'add':
+    case "add":
       if (args.help) {
         console.info(commands.add.help);
         return;
       }
       await cmd.add(args);
       break;
-    case 'init':
+    case "init":
       if (args.help) {
         console.info(commands.init.help);
         process.exit(0);
       }
       await cmd.init();
       break;
-    case 'g':
-    case 'graph':
+    case "g":
+    case "graph":
       if (args.help) {
         console.info(commands.graph.help);
         process.exit(0);
       }
       await cmd.graph(args);
       break;
-    case 'help':
+    case "help":
       console.info(commands.help.help);
       break;
-    case 'template':
+    case "template":
       console.info(commands.template.help);
       break;
-    case 'templates':
+    case "templates":
       console.info(commands.template.help);
       break;
     default:
-      console.info('!invalid command provided');
+      console.info("!invalid command provided");
       console.info(commands.help.help);
       process.exit(255);
   }
 }
 
-main().catch(e => {
+main().catch((e) => {
   console.log(e);
   process.exit(255);
 });

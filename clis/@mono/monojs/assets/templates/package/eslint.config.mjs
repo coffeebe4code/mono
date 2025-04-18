@@ -22,6 +22,7 @@ export default [
     },
   },
   {
-    ignores: ["bin/**", "dist/*", "assets/*"],
+    ignores: ["dist/*", "assets/*"],
   },
 ];
+

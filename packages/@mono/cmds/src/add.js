@@ -1,7 +1,12 @@
-import * as fs from 'node:fs/promises';
-import * as v from '@mono/validations';
-import * as t from '@mono/templates';
-import { project_exists, create_project, load_mono, write_mono } from '@mono/logic';
+import * as fs from "node:fs/promises";
+import * as v from "@mono/validations";
+import * as t from "@mono/templates";
+import {
+  project_exists,
+  create_project,
+  load_mono,
+  write_mono,
+} from "@mono/logic";
 /** @typedef {import('@mono/logic').MonoStruct} MonoStruct */
 
 /**
@@ -23,8 +28,8 @@ export async function add(args) {
       - provide a template: {${template}} was provided`,
     );
   } else {
-    if (name.includes('@') || name.includes('/')) {
-      if (!name.includes('@') || !name.includes('/')) {
+    if (name.includes("@") || name.includes("/")) {
+      if (!name.includes("@") || !name.includes("/")) {
         v.suggestions(
           `Error: expected scoped package to contain an '@' and '/'`,
           `
@@ -32,7 +37,7 @@ export async function add(args) {
       - provide a correctly scoped project: ${name} was provided`,
         );
       }
-      if (name.split('/')[2]) {
+      if (name.split("/")[2]) {
         v.suggestions(
           `Error: expected scoped package to be of depth 1`,
           `
@@ -45,7 +50,7 @@ export async function add(args) {
   //const clean = v.git_clean();
   //await clean;
 
-  const scoped_name = name.includes('@') && name.includes('/');
+  const scoped_name = name.includes("@") && name.includes("/");
   const template_loc = t.get_template_kind_path(template);
 
   if (!template_loc) {
@@ -59,7 +64,7 @@ export async function add(args) {
   const resolved_dir = `${template_loc}/${name}`;
 
   const loc = fs
-    .access('./' + resolved_dir)
+    .access("./" + resolved_dir)
     .then(() => {
       v.suggestions(
         `Error: expected ./${resolved_dir} to not exist`,
@@ -69,7 +74,7 @@ export async function add(args) {
       - if you are not satisfied, you can undo your changes`,
       );
     })
-    .catch(() => console.log('safe to create'));
+    .catch(() => console.log("safe to create"));
 
   await loc;
 
@@ -85,8 +90,8 @@ export async function add(args) {
   await init;
 
   const cp = fs.cp(
-    import.meta.dirname + '/assets/templates/' + template,
-    process.cwd() + '/' + resolved_dir,
+    import.meta.dirname + "/assets/templates/" + template,
+    process.cwd() + "/" + resolved_dir,
     {
       recursive: true,
     },
@@ -94,31 +99,34 @@ export async function add(args) {
   await cp;
   const files = fs
     .readdir(resolved_dir, { recursive: true, withFileTypes: true })
-    .then(async files => {
+    .then(async (files) => {
       for (let file of files) {
         if (file.isFile()) {
           const path = `${process.cwd()}/${file.path}/${file.name}`;
-          await fs.readFile(path, { encoding: 'utf8' }).then(async data => {
-            if (data.indexOf('{{') != -1) {
-              const replaced = data.replaceAll(/{{\s*project_name\s*}}/gi, name);
+          await fs.readFile(path, { encoding: "utf8" }).then(async (data) => {
+            if (data.indexOf("{{") != -1) {
+              const replaced = data.replaceAll(
+                /{{\s*project_name\s*}}/gi,
+                name,
+              );
               await fs.writeFile(path, replaced, {
-                encoding: 'utf8',
+                encoding: "utf8",
               });
             }
           });
         }
       }
     })
-    .catch(e => v.critical_error(e));
+    .catch((e) => v.critical_error(e));
   await files;
 
-  const path = process.cwd() + '/' + resolved_dir;
+  const path = process.cwd() + "/" + resolved_dir;
   const installs = fs
-    .readFile(path + '/installs.txt', { encoding: 'utf8' })
-    .then(async data => {
-      const del = fs.unlink(path + '/installs.txt');
+    .readFile(path + "/installs.txt", { encoding: "utf8" })
+    .then(async (data) => {
+      const del = fs.unlink(path + "/installs.txt");
       if (data.length > 5) {
-        const split = data.split('\n');
+        const split = data.split("\n");
         const installD = v.npm_install(split[0].trimEnd());
         let install = undefined;
         if (split.length > 1) {
@@ -130,7 +138,7 @@ export async function add(args) {
       await del;
       return;
     })
-    .catch(e => v.critical_error(e));
+    .catch((e) => v.critical_error(e));
 
   await installs;
 
@@ -150,12 +158,12 @@ export async function add(args) {
   });
 
   const tsconfig = fs
-    .readFile('./tsconfig.json', { encoding: 'utf8' })
-    .then(async data => {
+    .readFile("./tsconfig.json", { encoding: "utf8" })
+    .then(async (data) => {
       const obj = JSON.parse(data);
       obj.compilerOptions.paths = obj.compilerOptions.paths || {};
       obj.compilerOptions.paths[name] = [`./${resolved_dir}/*`];
-      return fs.writeFile('./tsconfig.json', JSON.stringify(obj, undefined, 2));
+      return fs.writeFile("./tsconfig.json", JSON.stringify(obj, undefined, 2));
     });
 
   await Promise.all([monojs, tsconfig]);

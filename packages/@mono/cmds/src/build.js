@@ -1,5 +1,5 @@
-import { run_all_commands, load_mono, project_exists } from '@mono/logic';
-import { critical_error, suggestions } from '@mono/validations';
+import { run_all_commands, load_mono, project_exists } from "@mono/logic";
+import { critical_error, suggestions } from "@mono/validations";
 /**
  * @param {any} args - the args from command
  * @returns {Promise<void>}
@@ -18,7 +18,7 @@ export async function build(args) {
   }
 
   const mono_loaded = load_mono()
-    .then(async mono => {
+    .then(async (mono) => {
       const project_loaded = project_exists(mono, project);
       if (!project_loaded) {
         critical_error(`!expected a project that exists
@@ -26,10 +26,10 @@ export async function build(args) {
       }
       let found = false;
       for (const t of project_loaded.targets) {
-        if (t.kind === 'build') {
+        if (t.kind === "build") {
           found = true;
 
-          await run_all_commands(mono, project_loaded, 'build');
+          await run_all_commands(mono, project_loaded, "build");
         }
       }
       if (!found) {
@@ -42,7 +42,7 @@ export async function build(args) {
         );
       }
     })
-    .catch(e => critical_error(e));
+    .catch((e) => critical_error(e));
 
   await mono_loaded;
 }

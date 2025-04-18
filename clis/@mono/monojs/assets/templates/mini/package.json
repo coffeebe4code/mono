@@ -1,0 +1,21 @@
+{
+  "name": "{{project_name}}",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "{{project_name}}": "./bin/index.mjs"
+  },
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier 'src/**/*.js' --check",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "tsc": "tsc",
+    "build": "node esbuild.mjs"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {},
+  "dependencies": {}
+}

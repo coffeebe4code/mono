@@ -1,11 +1,11 @@
-import * as fs from 'node:fs/promises';
-import { v4 } from 'uuid';
+import * as fs from "node:fs/promises";
+import { v4 } from "uuid";
 import {
   get_template_folder_kind,
   get_template_kind,
   TemplateKind,
-} from '@mono/templates';
-import * as v from '@mono/validations';
+} from "@mono/templates";
+import * as v from "@mono/validations";
 
 /**
  * Represents the Dependencies structure
@@ -46,26 +46,26 @@ export function get_target_kinds(kind) {
   // ensure the order elements in the array is increasing with its get order value
   switch (kind) {
     case TemplateKind.SERVICE:
-      return ['prettier', 'tsc', 'lint', 'build', 'test', 'serve', 'install'];
+      return ["prettier", "tsc", "lint", "build", "test", "serve", "install"];
     case TemplateKind.CLI:
-      return ['prettier', 'tsc', 'lint', 'build', 'test', 'install'];
+      return ["prettier", "tsc", "lint", "build", "test", "install"];
     case TemplateKind.APP:
-      return ['prettier', 'tsc', 'lint', 'build', 'test'];
+      return ["prettier", "tsc", "lint", "build", "test"];
     case TemplateKind.PACKAGE:
-      return ['prettier', 'tsc', 'lint', 'build', 'test'];
+      return ["prettier", "tsc", "lint", "build", "test"];
     default:
-      throw 'Error: internal monojs issue';
+      throw "Error: internal monojs issue";
   }
 }
 
 export const TargetValues = {
-  PRETTIER: 'prettier',
-  TSC: 'tsc',
-  LINT: 'lint',
-  BUILD: 'build',
-  TEST: 'test',
-  INSTALL: 'install',
-  SERVE: 'serve',
+  PRETTIER: "prettier",
+  TSC: "tsc",
+  LINT: "lint",
+  BUILD: "build",
+  TEST: "test",
+  INSTALL: "install",
+  SERVE: "serve",
 };
 
 /**
@@ -89,7 +89,7 @@ function get_order(val) {
     case TargetValues.INSTALL:
       return 5;
     default:
-      throw 'invalid target value. internal monojs issue';
+      throw "invalid target value. internal monojs issue";
   }
 }
 
@@ -99,8 +99,8 @@ function get_order(val) {
  */
 export async function load_mono() {
   return await fs
-    .readFile(process.cwd() + '/monojs.json', { encoding: 'utf8' })
-    .then(data => {
+    .readFile(process.cwd() + "/monojs.json", { encoding: "utf8" })
+    .then((data) => {
       /** @type {MonoStruct} */
       const obj = JSON.parse(data);
       if (obj.version > 0) {
@@ -123,7 +123,7 @@ export async function load_mono() {
  */
 export async function write_mono(mono) {
   return await fs.writeFile(
-    process.cwd() + '/monojs.json',
+    process.cwd() + "/monojs.json",
     JSON.stringify(mono, undefined, 2),
   );
 }
@@ -151,7 +151,7 @@ export function create_project(name, template) {
   let type = get_template_kind(template);
   let kinds = get_target_kinds(type);
   /** @type {TargetStruct[]} */
-  const targets = kinds.map(kind => {
+  const targets = kinds.map((kind) => {
     return create_target(kind);
   });
 
@@ -209,14 +209,18 @@ export async function run_all_commands(mono, project, kind) {
   await fs.mkdir(target_path, { recursive: true });
   /** @type {{uuid: string, date: number}[]} */
   let vals = [];
-  let target_times = fs.readdir(target_path, { recursive: true }).then(async files => {
-    for (const file of files) {
-      const stat = await fs.stat(`${process.cwd()}/.mono-cache/targets/${file}`);
-      vals.push({ uuid: file, date: stat.mtimeMs });
-    }
-  });
+  let target_times = fs
+    .readdir(target_path, { recursive: true })
+    .then(async (files) => {
+      for (const file of files) {
+        const stat = await fs.stat(
+          `${process.cwd()}/.mono-cache/targets/${file}`,
+        );
+        vals.push({ uuid: file, date: stat.mtimeMs });
+      }
+    });
   await target_times;
-  const target = project.targets.find(t => t.kind === kind);
+  const target = project.targets.find((t) => t.kind === kind);
   if (!target) {
     throw `Error: expected target to exist for project ${project.name}: target ${kind}`;
   }
@@ -231,19 +235,25 @@ export async function run_all_commands(mono, project, kind) {
  * @param {{uuid: string, date: number}[]} vals - list of stats of targets
  * @returns {Promise<number>} - returns the number of targets ran
  */
-export async function recursively_run_target(mono, project, target, processed, vals) {
+export async function recursively_run_target(
+  mono,
+  project,
+  target,
+  processed,
+  vals,
+) {
   if (processed.includes(target.uuid)) {
     return 0;
   }
   let proc_count = 0;
 
   for (const dep of target.dependencies_down) {
-    const dep_proj = mono.projects.find(p => p.name === dep.name);
+    const dep_proj = mono.projects.find((p) => p.name === dep.name);
     if (!dep_proj) {
       throw `Error: expected project to exist, target: ${target.uuid} dependency: ${dep.name} `;
     }
 
-    const dep_target = dep_proj.targets.find(t => t.uuid === dep.uuid);
+    const dep_target = dep_proj.targets.find((t) => t.uuid === dep.uuid);
     if (!dep_target) {
       throw `Error: expected target to exist, dependency: ${dep.uuid} dependency: ${dep.name} `;
     }
@@ -256,13 +266,13 @@ export async function recursively_run_target(mono, project, target, processed, v
       vals,
     );
   }
-  const target_val = vals.find(x => x.uuid == target.uuid);
+  const target_val = vals.find((x) => x.uuid == target.uuid);
   let newer = false;
   if (target_val) {
-    const base_folder = `${process.cwd()}/${get_template_folder_kind(project.type) ?? ''}/${project.name}`;
+    const base_folder = `${process.cwd()}/${get_template_folder_kind(project.type) ?? ""}/${project.name}`;
     const src = await fs
       .readdir(base_folder + `/src`, { recursive: true })
-      .then(async files => {
+      .then(async (files) => {
         for (const file of files) {
           const stat = await fs.stat(`${base_folder}/src/${file}`);
           if (stat.mtimeMs >= target_val.date) {
@@ -271,8 +281,10 @@ export async function recursively_run_target(mono, project, target, processed, v
         }
       });
     const assets = await fs
-      .readdir(base_folder + `/assets`, { withFileTypes: true, recursive: true })
-      .then(async files => {
+      .readdir(base_folder + `/assets`, {
+        recursive: true,
+      })
+      .then(async (files) => {
         for (const file of files) {
           const stat = await fs.stat(`${base_folder}/assets/${file}`);
           if (stat.mtimeMs >= target_val.date) {
@@ -287,22 +299,29 @@ export async function recursively_run_target(mono, project, target, processed, v
     /** @type {{name:string, kind: string, uuid: string}[]} */
     let this_targets = [];
     for (const targ of project.targets) {
-      if (get_order(target.kind) > get_order(targ.kind) || targ.kind === target.kind) {
-        this_targets.push({ name: project.name, kind: targ.kind, uuid: targ.uuid });
+      if (
+        get_order(target.kind) > get_order(targ.kind) ||
+        targ.kind === target.kind
+      ) {
+        this_targets.push({
+          name: project.name,
+          kind: targ.kind,
+          uuid: targ.uuid,
+        });
       }
     }
-    const promises = this_targets.map(obj => {
+    const promises = this_targets.map((obj) => {
       return v.npm_run_spawn(obj.name, obj.kind);
     });
     await Promise.all(promises);
     await Promise.all(
-      this_targets.map(obj =>
+      this_targets.map((obj) =>
         fs
-          .open(`${process.cwd()}/.mono-cache/targets/${obj.uuid}`, 'w')
-          .then(handle => handle.close()),
+          .open(`${process.cwd()}/.mono-cache/targets/${obj.uuid}`, "w")
+          .then((handle) => handle.close()),
       ),
     );
-    processed.push(...this_targets.map(obj => obj.uuid));
+    processed.push(...this_targets.map((obj) => obj.uuid));
     return this_targets.length;
   }
   return 0;
