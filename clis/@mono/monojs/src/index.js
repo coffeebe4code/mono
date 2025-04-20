@@ -4,20 +4,38 @@ import * as cmd from "@mono/cmds";
 import * as templates from "@mono/templates";
 
 const commands = {
+  deploy: {
+    help: `
+    monojs deploy {project} <options>
+    examples:
+      \`monojs deploy @my-app/app\` - runs a build of my-app
+      \`monojs deploy @my-app/app -n\` - removes the cache, and runs every dependent target
+    
+    project:
+    {name}      ......... *required* provided name of project
+                          e.g. \`monojs deploy @my-app/app\`
+
+    options:
+    --no-cache  ......... removes cache, and does a fresh deploy
+                          e.g. \`monojs deploy @my-app/app --no-cache\`
+    -n          ......... alias of --no-cache
+    --help      ......... shows this help text
+  `,
+  },
   build: {
     help: `
     monojs build {project} <options>
     examples:
-      \`monojs build my-app\` - runs a build of my-app
-      \`monojs build my-app -n\` - removes the cache, and runs a build of my-app
+      \`monojs build @my-app/app\` - runs a build of my-app
+      \`monojs build @my-app/app -n\` - removes the cache, and runs a build of my-app
     
     project:
     {name}      ......... *required* provided name of project
-                          e.g. \`monojs build my-app\`
+                          e.g. \`monojs build @my-app/app\`
 
     options:
     --no-cache  ......... removes cache, and does a fresh build
-                          e.g. \`monojs build my-app --no-cache\`
+                          e.g. \`monojs build @my-app/app --no-cache\`
     -n          ......... alias of --no-cache
     --help      ......... shows this help text
   `,
@@ -27,7 +45,7 @@ const commands = {
     monojs (install | i) {project} <options>
     examples:
       \`monojs install @my-product/api lodash\` - adds lodash as a dependency
-      \`monojs i . -D @types/node\` - adds node types as dev dependencies
+      \`monojs i . -D @types/node\` - adds node types as dev dependencies globally
 
     project:
     {name}      ......... *required* name of the project, uses the root scope if there is
@@ -43,8 +61,8 @@ const commands = {
     examples:
       \`monojs add @my-product/api -t koa\` - creates a scoped node koa app
         the project location will be \`./src/services/my-product/api\`
-      \`monojs add shopping-cart -t koa\` - creates a node koa app
-        the project location will be \`./src/services/shopping-cart\`
+      \`monojs add @shopping-cart/order -t koa\` - creates a node koa app
+        the project location will be \`./src/services/shopping-cart/order\`
 
     project:
     {name}      ......... *required* name of the project, uses the root scope if there is
@@ -81,15 +99,15 @@ ${templates.get_templates().reduce((acc, val) => {
     help: `
     monojs (graph | g) {project} <options>
     examples:
-      \`monojs graph my-app --show\` - shows the graph dependencies
-      \`monojs g my-app --depends-on @org/shopping-cart - adds a dependency on @org/shopping-cart
+      \`monojs graph @my-app/app --show\` - shows the graph dependencies (not yet supported)
+      \`monojs g @my-app/app --depends-on @org/shopping-cart - adds a dependency on @org/shopping-cart
 
     project:
     {name}        ......... the name of the project to do various graph tasks
 
     options:
     --show        ......... shows the graph of dependencies of a project if name provided
-                            otherwise shows all dependencies
+                            otherwise shows all dependencies (not yet supported)
     -s            ......... alias of --show
     --depends-on  ......... adds a downstream dependency on the project provided
     -d            ......... alias of --depends-on`,
@@ -103,7 +121,9 @@ ${templates.get_templates().reduce((acc, val) => {
     commands:
     install ............. installs packages at root or at workspace members
     i       ............. alias of install
-    build   ............. builds a specified project add     ............. adds a new project to the workspace based on a predefined template
+    build   ............. builds a specified project
+    add     ............. adds a new project to the workspace based on a predefined template
+    deploy  ............. deploys the project to the configured location clis get installed
     init    ............. turns the current directory into a monojs monorepo
     graph   ............. all graph work for a project done with this command
     g       ............. alias of graph

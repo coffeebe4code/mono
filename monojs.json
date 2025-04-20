@@ -56,7 +56,7 @@
           ]
         },
         {
-          "kind": "install",
+          "kind": "deploy",
           "uuid": "2f402a3b-0a60-4e41-88b1-542605ae5cd5",
           "dependencies_down": []
         }

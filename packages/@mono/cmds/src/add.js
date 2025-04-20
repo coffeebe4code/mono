@@ -24,31 +24,31 @@ export async function add(args) {
       `Error: expected args for name and template option`,
       `
       suggestions:
-      - provide a scoped or unscoped name: {${name}} was provided
+      - provide a scoped: {${name}} was provided
       - provide a template: {${template}} was provided`,
     );
-  } else {
-    if (name.includes("@") || name.includes("/")) {
-      if (!name.includes("@") || !name.includes("/")) {
-        v.suggestions(
-          `Error: expected scoped package to contain an '@' and '/'`,
-          `
+  }
+
+  if (!name.includes("@") || !name.includes("/")) {
+    v.suggestions(
+      `Error: expected scoped package to contain an '@' and '/'`,
+      `
       suggestions:
-      - provide a correctly scoped project: ${name} was provided`,
-        );
-      }
-      if (name.split("/")[2]) {
-        v.suggestions(
-          `Error: expected scoped package to be of depth 1`,
-          `
+      - provide a correctly scoped project: ${name} was provided
+      - e.g. @mono/logic , @shopping-cart/order-form , @org/document-hub`,
+    );
+  }
+  if (name.split("/")[2]) {
+    v.suggestions(
+      `Error: expected scoped package to be of depth 1`,
+      `
       suggestions:
       - provide 'flat featured' scoped project: ${name} was provided`,
-        );
-      }
-    }
+    );
   }
-  //const clean = v.git_clean();
-  //await clean;
+
+  const clean = v.git_clean();
+  await clean;
 
   const scoped_name = name.includes("@") && name.includes("/");
   const template_loc = t.get_template_kind_path(template);

@@ -14,6 +14,7 @@ const gitignore_contents = `
 bin
 node_modules
 dist
+.env
 `;
 
 /**
@@ -28,7 +29,6 @@ export async function init() {
   const gitdir = v.git_dir_exists();
   const package_file = v.package_exists();
   const readdir = fs.readdir(".").then(async (files) => {
-    let local_error = false;
     files.map((x) => {
       if (
         x.includes(".editorconfig") ||
@@ -36,15 +36,12 @@ export async function init() {
         x.includes("monojs.json") ||
         x.includes("tsconfig")
       ) {
-        local_error = true;
+        v.suggestions(
+          `Error: found either ".editorconfig", "jest.config", "monojs.json", or "tsconfig" file`,
+          read_suggestions,
+        );
       }
     });
-    if (local_error) {
-      v.suggestions(
-        `Error: found either ".editorconfig", "jest.config", "monojs.json", or "tsconfig" file`,
-        read_suggestions,
-      );
-    }
   });
 
   await Promise.all([gitignore, gitdir, package_file, readdir]);

@@ -25,4 +25,3 @@ export default [
     ignores: ["dist/*", "assets/*"],
   },
 ];
-
