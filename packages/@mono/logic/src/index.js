@@ -175,6 +175,7 @@ export function project_exists(mono, name) {
       return p;
     }
   }
+  console.error("project does not exist");
   return undefined;
 }
 
