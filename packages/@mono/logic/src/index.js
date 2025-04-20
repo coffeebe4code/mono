@@ -266,35 +266,33 @@ export async function recursively_run_target(
       vals,
     );
   }
-  const target_val = vals.find((x) => x.uuid == target.uuid);
+  const target_val = vals.find((x) => x.uuid == target.uuid) ?? { date: 0 };
   let newer = false;
-  if (target_val) {
-    const base_folder = `${process.cwd()}/${get_template_folder_kind(project.type) ?? ""}/${project.name}`;
-    const src = await fs
-      .readdir(base_folder + `/src`, { recursive: true })
-      .then(async (files) => {
-        for (const file of files) {
-          const stat = await fs.stat(`${base_folder}/src/${file}`);
-          if (stat.mtimeMs >= target_val.date) {
-            return true;
-          }
+  const base_folder = `${process.cwd()}/${get_template_folder_kind(project.type) ?? ""}/${project.name}`;
+  const src = await fs
+    .readdir(base_folder + `/src`, { recursive: true })
+    .then(async (files) => {
+      for (const file of files) {
+        const stat = await fs.stat(`${base_folder}/src/${file}`);
+        if (stat.mtimeMs >= target_val.date) {
+          return true;
         }
-      });
-    const assets = await fs
-      .readdir(base_folder + `/assets`, {
-        recursive: true,
-      })
-      .then(async (files) => {
-        for (const file of files) {
-          const stat = await fs.stat(`${base_folder}/assets/${file}`);
-          if (stat.mtimeMs >= target_val.date) {
-            return true;
-          }
+      }
+    });
+  const assets = await fs
+    .readdir(base_folder + `/assets`, {
+      recursive: true,
+    })
+    .then(async (files) => {
+      for (const file of files) {
+        const stat = await fs.stat(`${base_folder}/assets/${file}`);
+        if (stat.mtimeMs >= target_val.date) {
+          return true;
         }
-      })
-      .catch(() => false);
-    newer = (assets ?? false) || (src ?? false);
-  }
+      }
+    })
+    .catch(() => false);
+  newer = (assets ?? false) || (src ?? false);
   if (newer || proc_count > 0) {
     /** @type {{name:string, kind: string, uuid: string}[]} */
     let this_targets = [];
