@@ -1,2 +1,2 @@
 npm i -D @types/uws
-npm i uNetworking/uWebSockets.js#20.51.0
+npm install uNetworking/uWebSockets.js#6609a88ffa9a16ac5158046761356ce03250a0df

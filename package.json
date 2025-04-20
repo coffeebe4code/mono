@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "ins": "npm i . -g"
+    "quick-build": "npm run build -w @mono/validations && npm run build -w @mono/templates && npm run build -w @mono/logic && npm run build -w  @mono/cmds && npm run build -w @mono/monojs",
+    "bootstrap": "npm ci && npm run quick-build && npm run ins",
+    "ins": "npm i ./clis/@mono/monojs -g"
   },
   "author": "coffeeb4code",
   "license": "MIT",

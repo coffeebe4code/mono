@@ -129,7 +129,12 @@ async function npm_run_exec(scope, target) {
  */
 async function npm_install(installs) {
   return new Promise((res, rej) => {
-    const ins = execCb(installs);
+    const split = installs.split(" ");
+    const ins = spawn(split[0], split.splice(1), {
+      stdio: "inherit",
+      shell: true,
+      env: process.env,
+    });
     ins.stdout?.on("data", (data) => {
       process.stdout.write(data);
     });
