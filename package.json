@@ -29,15 +29,8 @@
     "uuid": "^9.0.1"
   },
   "workspaces": [
-    "packages/@cmds/add",
-    "packages/@cmds/init",
-    "packages/@cmds/graph",
-    "packages/@cmds/build",
-    "packages/@cmds/install",
-    "packages/@core/mono",
     "packages/@mono/templates",
     "packages/@mono/validations",
-    "packages/@core/fs-wrappers",
     "clis/@mono/monojs",
     "packages/@mono/cmds",
     "packages/@mono/logic"
