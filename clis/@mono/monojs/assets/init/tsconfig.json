@@ -9,7 +9,8 @@
     "allowJs": true,
     "noEmit": true,
     "alwaysStrict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "incremental": true
   },
   "include": [
     "packages/**/*.js",

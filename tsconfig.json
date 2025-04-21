@@ -10,6 +10,7 @@
     "noEmit": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
+    "incremental": true,
     "paths": {
       "@mono/monojs": ["./clis/@mono/monojs/*"],
       "@mono/cmds": ["./packages/@mono/cmds/*"],
@@ -18,5 +19,5 @@
       "@mono/logic": ["./packages/@mono/logic/*"]
     }
   },
-  "include": ["packages/**", "clis/**", "services/**"]
+  "include": ["packages/**", "clis/**", "services/**", "apps/**/*.js"]
 }

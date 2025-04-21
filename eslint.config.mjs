@@ -7,12 +7,22 @@ import globals from "globals";
 export default [
   js.configs.recommended,
   {
-    files: ["packages/**/*.spec.js", "clis/**/*.spec.js"],
+    files: [
+      "packages/**/*.spec.js",
+      "clis/**/*.spec.js",
+      "services/**/*.spec.js",
+      "apps/**/*.spec.js",
+    ],
     ...jest.configs["flat/recommended"],
   },
   jsdoc.configs["flat/recommended"],
   {
-    files: ["packages/**/*.js", "clis/**/*.js"],
+    files: [
+      "packages/**/*.js",
+      "clis/**/*.js",
+      "services/**/*.js",
+      "apps/**/*.js",
+    ],
     languageOptions: { globals: { ...globals.nodeBuiltin } },
     rules: {
       "jsdoc/require-param": "warn",
@@ -20,8 +30,9 @@ export default [
       "jsdoc/require-returns": "warn",
       "jsdoc/require-returns-type": ["error"],
     },
+    ...jsdoc.configs["recommended-typescript-flavor"],
   },
   {
-    ignores: ["dist/*", "bin/*", "node_modules", "assets/*"],
+    ignores: ["dist", "bin", "node_modules", "assets"],
   },
 ];

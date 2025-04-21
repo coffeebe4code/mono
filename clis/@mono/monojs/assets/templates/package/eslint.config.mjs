@@ -20,8 +20,9 @@ export default [
       "jsdoc/require-returns": "warn",
       "jsdoc/require-returns-type": ["error"],
     },
+    ...jsdoc.configs["recommended-typescript-flavor"],
   },
   {
-    ignores: ["dist/*", "assets/*"],
+    ignores: ["dist", "assets"],
   },
 ];
