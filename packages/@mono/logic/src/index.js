@@ -15,6 +15,13 @@ import * as v from "@mono/validations";
  */
 
 /**
+ * Represents the Cached Targets
+ * @typedef {object} CachedTarget
+ * @property {string} uuid - uuid of the target
+ * @property {number} date - time in ms of the target
+ */
+
+/**
  * Represents the Targets structure
  * @typedef {object} TargetStruct
  * @property {string} kind - kind of the target build, lint, test, etc
@@ -208,8 +215,8 @@ export async function run_all_commands(mono, project, kind) {
   let processed = [];
   const target_path = `${process.cwd()}/.mono-cache/targets`;
   await fs.mkdir(target_path, { recursive: true });
-  /** @type {{uuid: string, date: number}[]} */
-  let vals = [];
+  /** @type {CachedTarget[]} */
+  let cached_targets = [];
   let target_times = fs
     .readdir(target_path, { recursive: true })
     .then(async (files) => {
@@ -217,7 +224,7 @@ export async function run_all_commands(mono, project, kind) {
         const stat = await fs.stat(
           `${process.cwd()}/.mono-cache/targets/${file}`,
         );
-        vals.push({ uuid: file, date: stat.mtimeMs });
+        cached_targets.push({ uuid: file, date: stat.mtimeMs });
       }
     });
   await target_times;
@@ -225,15 +232,21 @@ export async function run_all_commands(mono, project, kind) {
   if (!target) {
     throw `Error: expected target to exist for project ${project.name}: target ${kind}`;
   }
-  await recursively_run_target(mono, project, target, processed, vals);
+  await recursively_run_target(
+    mono,
+    project,
+    target,
+    processed,
+    cached_targets,
+  );
 }
 
 /**
  * @param {MonoStruct} mono - the mono structure
  * @param {ProjectStruct} project - the current project
  * @param {TargetStruct} target - the current target to run
- * @param {string[]} processed - list of processed UUIDs
- * @param {{uuid: string, date: number}[]} vals - list of stats of targets
+ * @param {string[]} processed - set of processed UUIDs
+ * @param {CachedTarget[]} vals - list of cached of targets
  * @returns {Promise<number>} - returns the number of targets ran
  */
 export async function recursively_run_target(
