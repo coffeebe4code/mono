@@ -19,5 +19,5 @@
       "@mono/logic": ["./packages/@mono/logic/*"]
     }
   },
-  "include": ["packages/**", "clis/**", "services/**", "apps/**/*.js"]
+  "include": ["packages/**", "clis/**", "services/**", "apps/**"]
 }

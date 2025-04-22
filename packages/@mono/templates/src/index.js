@@ -28,14 +28,12 @@ function get_template_folder_kind(name) {
 }
 
 const SupportedPathTemplates = {
-  koa: TemplateFolderKind.SERVICE,
   uws: TemplateFolderKind.SERVICE,
   mini: TemplateFolderKind.CLI,
   package: TemplateFolderKind.PACKAGE,
 };
 
 const SupportedTemplates = {
-  koa: TemplateKind.SERVICE,
   uws: TemplateKind.SERVICE,
   mini: TemplateKind.CLI,
   package: TemplateKind.PACKAGE,
