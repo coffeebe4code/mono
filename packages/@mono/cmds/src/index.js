@@ -5,3 +5,4 @@ export * from "./init.js";
 export * from "./graph.js";
 export * from "./serve.js";
 export * from "./deploy.js";
+export * from "./touch.js";

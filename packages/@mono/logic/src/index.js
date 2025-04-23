@@ -61,7 +61,7 @@ export function get_target_kinds(kind) {
     case TemplateKind.PACKAGE:
       return ["prettier", "tsc", "lint", "build", "test"];
     default:
-      throw "Error: internal monojs issue";
+      throw "invalid target kind in get_target_kinds. internal monojs issue";
   }
 }
 
@@ -96,7 +96,7 @@ function get_order(val) {
     case TargetValues.DEPLOY:
       return 5;
     default:
-      throw "invalid target value. internal monojs issue";
+      throw "invalid target value in get_order. internal monojs issue";
   }
 }
 

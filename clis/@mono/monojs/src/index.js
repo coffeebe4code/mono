@@ -205,6 +205,13 @@ async function main() {
       }
       await cmd.serve(args);
       break;
+    case "touch":
+      if (args.help) {
+        console.info(commands.touch.help);
+        return;
+      }
+      await cmd.touch(args);
+      break;
     case "deploy":
       if (args.help) {
         console.info(commands.deploy.help);
