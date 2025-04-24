@@ -63,9 +63,9 @@ const commands = {
     monojs touch {file_path}
     examples:
       \`monojs touch /home/user/chris/monojs/packages/@core/cmds/index.js\` - runs the highest target up to 
-        'test' on the project where the file is located.
+        'build' on the project where the file is located.
 
-    note: in the future this might run the target up to 'test' on projects which have the touched project in 
+    note: in the future this might run the target up to 'build' on projects which have the touched project in 
       its dependency graph
     
     file_path:

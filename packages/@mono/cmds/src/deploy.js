@@ -26,18 +26,18 @@ export async function deploy(args) {
       }
       let found = false;
       for (const t of project_loaded.targets) {
-        if (t.kind === "build") {
+        if (t.kind === "deploy") {
           found = true;
 
-          await run_all_commands(mono, project_loaded, "build");
+          await run_all_commands(mono, project_loaded, "deploy");
         }
       }
       if (!found) {
         suggestions(
-          `expected a project and target to contain build`,
+          `expected a project and target to contain deploy`,
           `
       suggestions:
-      - this project does not have a build target command
+      - this project does not have a deploy target command
       `,
         );
       }

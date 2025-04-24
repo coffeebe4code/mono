@@ -26,18 +26,18 @@ export async function serve(args) {
       }
       let found = false;
       for (const t of project_loaded.targets) {
-        if (t.kind === "build") {
+        if (t.kind === "serve") {
           found = true;
 
-          await run_all_commands(mono, project_loaded, "build");
+          await run_all_commands(mono, project_loaded, "serve");
         }
       }
       if (!found) {
         suggestions(
-          `expected a project and target to contain build`,
+          `expected a project and target to contain serve`,
           `
       suggestions:
-      - this project does not have a build target command
+      - this project does not have a serve target command
       `,
         );
       }
