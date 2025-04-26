@@ -7,12 +7,22 @@ import { critical_error, suggestions } from "@mono/validations";
 export async function deploy(args) {
   /** @type {string | undefined} */
   const project = args._[1];
+  const env = args._["env"] ?? args.e;
 
   if (!project) {
     suggestions(
       `expected args for project name`,
       `suggestions:
       - provide a scoped or unscoped name
+      `,
+    );
+  }
+  if (!env) {
+    suggestions(
+      `expected deploy env`,
+      `suggestions:
+      - provide local for packages to install locally
+      - provide prod for packages to publish
       `,
     );
   }

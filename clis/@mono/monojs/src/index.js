@@ -62,7 +62,7 @@ const commands = {
     help: `
     monojs touch {file_path}
     examples:
-      \`monojs touch /home/user/chris/monojs/packages/@core/cmds/index.js\` - runs the highest target up to 
+      \`monojs touch /home/chris/monojs/packages/@core/cmds/index.js\` - runs the highest target up to 
         'build' on the project where the file is located.
 
     note: in the future this might run the target up to 'build' on projects which have the touched project in 
@@ -70,11 +70,11 @@ const commands = {
     
     file_path:
     {path}      ......... *required* provide the file path of the touched project
-                          e.g. \`monojs touch /home/user/chris/.../index.js\`
+                          e.g. \`monojs touch /home/chris/chris/.../index.js\`
 
     options:
     --no-cache  ......... removes cache, and does a fresh touch
-                          e.g. \`monojs touch /home/user/chris/.../index.js --no-cache\`
+                          e.g. \`monojs touch /home/chris/chris/.../index.js --no-cache\`
     -n          ......... alias of --no-cache
     --help      ......... shows this help text
   `,

@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from "@eslint/js";
 import jsdoc from "eslint-plugin-jsdoc";
 import jest from "eslint-plugin-jest";
@@ -30,7 +29,6 @@ export default [
       "jsdoc/require-returns": "warn",
       "jsdoc/require-returns-type": ["error"],
     },
-    ...jsdoc.configs["recommended-typescript-flavor"],
   },
   {
     ignores: ["dist", "bin", "node_modules", "assets"],

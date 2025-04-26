@@ -12,7 +12,9 @@
     "prettier": "prettier 'src/**/*.js' --check",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "tsc": "tsc",
-    "build": "node esbuild.mjs"
+    "build": "node esbuild.mjs",
+    "serve": "",
+    "deploy": ""
   },
   "author": "",
   "license": "",
