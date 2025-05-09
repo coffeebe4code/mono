@@ -13,7 +13,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "tsc": "tsc",
     "build": "node esbuild.mjs",
-    "deploy:local": "npm i . -g"
+    "local": "npm i . -g"
   },
   "author": "",
   "license": "",

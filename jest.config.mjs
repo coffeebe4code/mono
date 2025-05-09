@@ -4,6 +4,12 @@ const config = {
   cacheDirectory: ".mono-cache/jest_rs",
   clearMocks: true,
   maxWorkers: "70%",
+  testMatch: [
+    "packages/**/src/**/*.spec.js",
+    "clis/**/src/**/*.spec.js",
+    "apps/**/src/**/*.spec.js",
+    "services/**/src/**/*.spec.js",
+  ],
 };
 
 export default config;

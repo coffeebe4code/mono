@@ -4,20 +4,20 @@ import * as cmd from "@mono/cmds";
 import * as templates from "@mono/templates";
 
 const commands = {
-  deploy: {
+  local: {
     help: `
-    monojs deploy {project} <options>
+    monojs local {project} <options>
     examples:
-      \`monojs deploy @my-app/app\`     - runs a build of my-app
-      \`monojs deploy @my-app/app -n\`  - removes the cache, and runs every dependent target
+      \`monojs local @my-app/app\`     - runs a build of my-app
+      \`monojs local @my-app/app -n\`  - removes the cache, and runs every dependent target
     
     project:
     {name}      ......... *required* provided name of project
-                          e.g. \`monojs deploy @my-app/app\`
+                          e.g. \`monojs local @my-app/app\`
 
     options:
-    --no-cache  ......... removes cache, and does a fresh deploy
-                          e.g. \`monojs deploy @my-app/app --no-cache\`
+    --no-cache  ......... removes cache, and does a fresh local
+                          e.g. \`monojs local @my-app/app --no-cache\`
     -n          ......... alias of --no-cache
     --help      ......... shows this help text
   `,
@@ -161,7 +161,7 @@ ${templates.get_templates().reduce((acc, val) => {
     build   ............. builds a specified project
     b       ............. alias of build
     add     ............. adds a new project to the workspace based on a predefined template
-    deploy  ............. deploys the project to the configured location clis get installed
+    local  ............. locals the project to the configured location clis get installed
     serve   ............. runs the serve command for the specified project
     init    ............. turns the current directory into a monojs monorepo
     graph   ............. all graph work for a project done with this command
@@ -212,12 +212,12 @@ async function main() {
       }
       await cmd.touch(args);
       break;
-    case "deploy":
+    case "local":
       if (args.help) {
-        console.info(commands.deploy.help);
+        console.info(commands.local.help);
         return;
       }
-      await cmd.deploy(args);
+      await cmd.local(args);
       break;
     case "add":
       if (args.help) {
