@@ -1,0 +1,14 @@
+FROM node:20-alpine AS release
+
+WORKDIR /app
+
+COPY ./dist/ ./dist
+
+EXPOSE 3000
+RUN cd ./dist
+
+# Default environment
+ENV NODE_ENV=production
+
+# Start the server
+CMD ["node", "server.js"]
